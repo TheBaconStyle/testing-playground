@@ -1,0 +1,25 @@
+{
+  "name": "npm-workspace",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev": "concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:sdk": "npm run build --workspace=sdk",
+    "build:swagger": "npm run build:swagger --workspace=backend",
+    "prepare": "ts-patch install && typia patch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "devDependencies": {
+    "@dotenvx/dotenvx": "^1.26.0",
+    "concurrently": "^9.0.1"
+  }
+}

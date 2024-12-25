@@ -1,0 +1,10 @@
+node_modules
+.next
+dist
+.env
+.eslintrc.json
+.gitignore
+.prettierrc
+test
+.git
+README.md
