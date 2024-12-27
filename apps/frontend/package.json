@@ -7,19 +7,31 @@
     "build": "next build && cpy .next/static .next/standalone/apps/frontend && cpy public .next/standalone/apps/frontend",
     "start": "dotenvx run -- .next/standalone/apps/frontend/server.js",
     "lint": "next lint",
-    "dev:email": "email dev --dir src/emails --port 3001"
+    "dev:email": "email dev --dir src/views/email/ui --port 3001"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.4",
     "@edge-runtime/ponyfill": "^3.0.0",
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@hookform/resolvers": "^3.9.1",
+    "@mui/icons-material": "^6.3.0",
+    "@mui/material": "^6.3.0",
+    "@mui/material-nextjs": "^6.3.0",
     "@react-email/components": "0.0.28",
     "@react-email/render": "1.0.2",
+    "framer-motion": "^11.15.0",
     "next": "14.2.18",
     "next-auth": "^5.0.0-beta.25",
+    "next-themes": "^0.4.4",
     "nodemailer": "^6.9.16",
+    "notistack": "^3.0.1",
     "postgrejs": "^2.22.2",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-hook-form": "^7.54.2",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "^1.24.5",

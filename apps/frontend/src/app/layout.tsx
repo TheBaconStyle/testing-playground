@@ -1,6 +1,10 @@
-import { auth } from "@/config/auth";
+import { Box } from "@mui/material";
 import type { Metadata } from "next";
-import { SessionProvider } from "next-auth/react";
+import { getTheme } from "@/features/theme/api/theme";
+import { AuthProvider } from "@/features/auth/ui/AuthProvider";
+import { MuiThemeProvider } from "@/features/theme/ui/MuiThemeProvider";
+import { NextThemeProvider } from "@/features/theme/ui/NextThemeProvider";
+import { NotificationProvider } from "@/features/notifications/ui/NotificationProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,13 +16,26 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
+  const userTheme = await getTheme();
 
   return (
-    <html lang="en">
-      <SessionProvider session={session}>
-        <body>{children}</body>
-      </SessionProvider>
+    <html lang="ru" suppressHydrationWarning>
+      <AuthProvider>
+        <Box
+          component="body"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh",
+          }}
+        >
+          <NextThemeProvider>
+            <MuiThemeProvider theme={userTheme}>
+              <NotificationProvider>{children}</NotificationProvider>
+            </MuiThemeProvider>
+          </NextThemeProvider>
+        </Box>
+      </AuthProvider>
     </html>
   );
 }

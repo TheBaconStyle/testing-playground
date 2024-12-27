@@ -1,5 +1,6 @@
 "use client";
 
+import { Box, Button } from "@mui/material";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 
@@ -7,10 +8,12 @@ export function Profile() {
   const { status, data } = useSession();
 
   return (
-    <div>
+    <Box p={2}>
       {status === "unauthenticated" && (
         <>
-          <button onClick={() => signIn()}>Sign in</button>
+          <Button variant="contained" onClick={() => signIn()}>
+            Sign in
+          </Button>
         </>
       )}
       {status === "authenticated" && (
@@ -33,10 +36,12 @@ export function Profile() {
           </div>
 
           <div>
-            <button onClick={() => signOut()}>SignOut</button>
+            <Button variant="contained" onClick={() => signOut()}>
+              SignOut
+            </Button>
           </div>
         </>
       )}
-    </div>
+    </Box>
   );
 }

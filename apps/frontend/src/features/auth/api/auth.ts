@@ -1,6 +1,6 @@
 "use server";
 
-import { defaultConfig } from "@/config/api";
+import { defaultConfig } from "@/shared/config/api/api";
 import { cookies } from "next/headers";
 import { api } from "sdk/lib/functional";
 

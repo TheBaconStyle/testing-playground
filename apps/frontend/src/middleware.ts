@@ -1,45 +1,45 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from "next/server";
-import { checkSession } from "./actions/auth";
+// import { checkSession } from "./actions/auth";
 
-const publicPaths = ["/auth/signout", "/"];
-const guestPaths = ["/auth/signup", "/auth/signin"];
+// const publicPaths = ["/auth/signout", "/"];
+// const guestPaths = ["/auth/signup", "/auth/signin"];
 
-const defaultRedirect = "/";
+// const defaultRedirect = "/";
 
 export const middleware = async (request: NextRequest) => {
-  const sessionToken = request.cookies.get("example-session");
+  // const sessionToken = request.cookies.get("example-session");
 
-  let isAuthorized = false;
+  // let isAuthorized = false;
 
-  if (sessionToken && sessionToken.value) {
-    const authRes = await checkSession();
+  // if (sessionToken && sessionToken.value) {
+  //   const authRes = await checkSession();
 
-    if (authRes.success) {
-      isAuthorized = authRes.data;
-    }
-  }
+  //   if (authRes.success) {
+  //     isAuthorized = authRes.data;
+  //   }
+  // }
 
-  const requestUrl = request.nextUrl.clone();
+  // const requestUrl = request.nextUrl.clone();
 
-  const isPublicPath = publicPaths.includes(requestUrl.pathname);
+  // const isPublicPath = publicPaths.includes(requestUrl.pathname);
 
-  const isGuestPath = guestPaths.includes(requestUrl.pathname);
+  // const isGuestPath = guestPaths.includes(requestUrl.pathname);
 
-  if (isAuthorized && isGuestPath) {
-    const redirectUrl = requestUrl.clone();
+  // if (isAuthorized && isGuestPath) {
+  //   const redirectUrl = requestUrl.clone();
 
-    requestUrl.pathname = defaultRedirect;
+  //   requestUrl.pathname = defaultRedirect;
 
-    return NextResponse.redirect(redirectUrl, { headers: request.headers });
-  }
+  //   return NextResponse.redirect(redirectUrl, { headers: request.headers });
+  // }
 
-  if (!isGuestPath && !isPublicPath && !isAuthorized) {
-    const signInUrl = requestUrl.clone();
+  // if (!isGuestPath && !isPublicPath && !isAuthorized) {
+  //   const signInUrl = requestUrl.clone();
 
-    signInUrl.pathname = "/auth/signin";
+  //   signInUrl.pathname = "/auth/signin";
 
-    return NextResponse.redirect(signInUrl, { headers: request.headers });
-  }
+  //   return NextResponse.redirect(signInUrl, { headers: request.headers });
+  // }
 
   return NextResponse.next({ request });
 };

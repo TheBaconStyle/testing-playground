@@ -4,7 +4,7 @@ import NextAuth, { NextAuthConfig } from "next-auth";
 import Discord from "next-auth/providers/discord";
 import Email from "next-auth/providers/nodemailer";
 import { createTransport } from "nodemailer";
-import { renderToHTML } from "../emails/SignInEmail";
+import { renderToHTML } from "@/views/email/ui/SignInEmail";
 
 export const adapter = DrizzleAdapter(db, {
   usersTable: schema.users,
