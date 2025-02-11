@@ -8,7 +8,10 @@ const nextConfig = {
       allowedOrigins: ["http://localhost:3000"],
     },
   },
-  images: { unoptimized: true },
+  images: {
+    loader: "custom",
+    loaderFile: "./src/features/images/api/index.ts",
+  },
 };
 
 export default nextConfig;

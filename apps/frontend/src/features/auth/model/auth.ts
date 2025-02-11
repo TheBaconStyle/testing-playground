@@ -1,10 +1,10 @@
+import { renderToHTML } from "@/views/email/ui/SignInEmail";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db, schema } from "db";
 import NextAuth, { NextAuthConfig } from "next-auth";
 import Discord from "next-auth/providers/discord";
 import Email from "next-auth/providers/nodemailer";
 import { createTransport } from "nodemailer";
-import { renderToHTML } from "@/views/email/ui/SignInEmail";
 
 export const adapter = DrizzleAdapter(db, {
   usersTable: schema.users,
@@ -26,6 +26,7 @@ const authConfig: NextAuthConfig = {
       },
       from: "info@example.local",
       secret: process.env.AUTH_SECRET!,
+      maxAge: 60 * 15,
       async sendVerificationRequest({
         url,
         provider: { server, from },
@@ -45,12 +46,16 @@ const authConfig: NextAuthConfig = {
       },
     }),
   ],
-  secret: process.env.AUTH_SECRET!,
   session: { strategy: "database" },
+  secret: process.env.AUTH_SECRET!,
   cookies: {
     sessionToken: { name: "example-session" },
     callbackUrl: { name: "example-callback" },
     csrfToken: { name: "example-csrf" },
+  },
+  pages: {
+    signIn: "/auth/signin",
+    verifyRequest: "/auth/verify",
   },
 };
 

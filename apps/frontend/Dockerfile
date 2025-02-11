@@ -4,7 +4,17 @@ FROM base AS build
 
 WORKDIR /app
 
-COPY . .
+COPY ./apps/frontend ./apps/frontend
+
+COPY ./apps/backend ./apps/backend
+
+COPY ./packages/db ./packages/db
+
+COPY ./packages/sdk ./packages/sdk
+
+COPY package.json .
+
+COPY package-lock.json .
 
 RUN npm i
 
@@ -14,8 +24,7 @@ FROM base AS main
 
 WORKDIR /app
 
-COPY --from=build /app/apps/frontend/.next/standalone/apps/frontend .
-COPY --from=build /app/apps/frontend/.next/standalone/node_modules ./node_modules
+COPY --from=build /app/apps/frontend/.next/standalone ./
 
 EXPOSE 3000
 
