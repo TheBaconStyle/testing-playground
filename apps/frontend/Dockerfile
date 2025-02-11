@@ -4,17 +4,17 @@ FROM base AS build
 
 WORKDIR /app
 
-COPY ./apps/frontend ./apps/frontend
+COPY apps/frontend apps/frontend
 
-COPY ./apps/backend ./apps/backend
+COPY apps/backend apps/backend
 
-COPY ./packages/db ./packages/db
+COPY packages/db packages/db
 
-COPY ./packages/sdk ./packages/sdk
+COPY packages/sdk packages/sdk
 
-COPY package.json .
+COPY package.json package.json
 
-COPY package-lock.json .
+COPY package-lock.json package-lock.json
 
 RUN npm i
 
