@@ -5,7 +5,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  PaletteMode,
+  type PaletteMode,
   Tooltip,
 } from "@mui/material";
 import { useTheme } from "next-themes";

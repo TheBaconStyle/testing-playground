@@ -1,5 +1,5 @@
-import { LinkProps as MuiLinkProps, Link as MUILink } from "@mui/material";
-import Link, { LinkProps } from "next/link";
+import { type LinkProps as MuiLinkProps, Link as MUILink } from "@mui/material";
+import Link, { type LinkProps } from "next/link";
 
 export type TBreadcrumbLink = MuiLinkProps & LinkProps & {};
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { SnackbarProvider } from "notistack";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 export function NotificationProvider({ children }: PropsWithChildren) {
   return (

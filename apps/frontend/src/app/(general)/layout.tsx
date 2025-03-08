@@ -1,6 +1,6 @@
 import { Header } from "@/widgets/Header/ui/Header";
 import { Box } from "@mui/material";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 export default async function GeneralLayout({ children }: PropsWithChildren) {
   return (
     <>

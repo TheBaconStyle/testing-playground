@@ -1,5 +1,7 @@
 "use client";
 
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
 import QuizIcon from "@mui/icons-material/Quiz";
 import {
   AppBar,
@@ -8,20 +10,13 @@ import {
   Button,
   Menu,
   Link as MuiLink,
-  Stack,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
-import { useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { signOut, signIn } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
-import { BreadcrumbsContainer } from "../../Breadcrumbs/ui/BreadcrumbsContainer";
-import { NavigateNext } from "@mui/icons-material";
 
 export function Header() {
   const session = useSession();
@@ -35,10 +30,8 @@ export function Header() {
       action?.();
       setMenuOpen(false);
     },
-    [setMenuOpen]
+    []
   );
-
-  const pathname = usePathname();
 
   return (
     <AppBar component="header" position="sticky">
@@ -58,7 +51,6 @@ export function Header() {
             Войти
           </Button>
         )}
-        <BreadcrumbsContainer separator={<NavigateNext fontSize="small" />} />
         {session.data && (
           <>
             <Button

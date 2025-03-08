@@ -1,6 +1,6 @@
 import { auth } from "@/features/auth/model/auth";
 import { SessionProvider } from "next-auth/react";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 /**
  * AuthProvider component provides authentication context to its children components.

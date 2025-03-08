@@ -1,7 +1,7 @@
 "use client";
 
-import { ThemeProvider, ThemeProviderProps } from "next-themes";
-import { PropsWithChildren } from "react";
+import { ThemeProvider, type ThemeProviderProps } from "next-themes";
+import type { PropsWithChildren } from "react";
 import { ThemeController } from "./ThemeController";
 
 export function NextThemeProvider({
