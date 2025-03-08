@@ -21,5 +21,9 @@
   "devDependencies": {
     "@dotenvx/dotenvx": "^1.26.0",
     "concurrently": "^9.0.1"
+  },
+  "dependencies": {
+    "ts-patch": "^3.3.0",
+    "typia": "^8.0.0"
   }
 }

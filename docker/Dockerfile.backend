@@ -1,0 +1,30 @@
+FROM node:alpine3.20 AS base
+
+FROM base AS build
+
+WORKDIR /app
+
+COPY ../package* .
+
+COPY ../apps/backend/package.json ./apps/backend/package.json
+
+COPY ../packages/db/package.json ./packages/db/package.json
+
+RUN npm i
+
+COPY ../apps/backend ./apps/backend
+
+COPY ../packages/db ./packages/db
+
+RUN npm run build --workspace=backend
+
+FROM base AS main
+
+WORKDIR /app
+
+COPY --from=build /app/apps/backend/dist/index.js .
+
+EXPOSE 5000
+
+CMD [ "node", "index" ]
+

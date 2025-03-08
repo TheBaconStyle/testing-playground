@@ -1,0 +1,26 @@
+FROM node:alpine3.20 AS base
+
+FROM base AS build
+
+WORKDIR /app
+
+COPY ../package* .
+
+COPY ../packages/db/package.json ./packages/db/package.json
+
+RUN npm i
+
+COPY ../packages/db ./packages/db
+
+RUN npm run build:migration --workspace=db
+
+FROM base AS main
+
+WORKDIR /app
+
+COPY --from=build /app/packages/db/dist/index.js .
+
+EXPOSE 5000
+
+CMD [ "node", "index" ]
+

@@ -1,0 +1,34 @@
+FROM node:alpine3.20 AS base
+
+FROM base AS build
+
+WORKDIR /app
+
+COPY ../package* .
+
+COPY ../../apps/frontend/package.json ./apps/frontend/package.json
+
+COPY ../../packages/db/package.json ./packages/db/package.json
+
+COPY ../../packages/sdk/package.json ./packages/sdk/package.json
+
+RUN npm i
+
+COPY ../../apps/frontend ./apps/frontend
+
+COPY ../../packages/db ./packages/db
+
+COPY ../../packages/sdk ./packages/sdk
+
+RUN npm run build --workspace=frontend
+
+FROM base AS main
+
+WORKDIR /app
+
+COPY --from=build /app/apps/frontend/.next/standalone ./
+
+EXPOSE 3000
+
+CMD [ "node", "apps/frontend/server.js" ]
+

@@ -1,10 +1,77 @@
 services:
+  nginxproxymanager:
+    image: "jc21/nginx-proxy-manager:latest"
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    networks:
+      - devnet
   mail:
     restart: on-failure
     image: haravich/fake-smtp-server
     ports:
       - "1080:1080"
       - "1025:1025"
+    networks:
+      - devnet
+
+  backend:
+    image: template-backend:latest
+    environment:
+      DB_HOST: ${DB_HOST:?error}
+      DB_PORT: ${DB_PORT:?error}
+      DB_NAME: ${DB_NAME:?error}
+      DB_SCHEMA: ${DB_SCHEMA:?error}
+      DB_USER: ${DB_USER:?error}
+      DB_PASSWORD: ${DB_PASSWORD:?error}
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    networks:
+      - devnet
+
+  migrator:
+    image: template-migration:latest
+    environment:
+      DB_HOST: ${DB_HOST:?error}
+      DB_PORT: ${DB_PORT:?error}
+      DB_NAME: ${DB_NAME:?error}
+      DB_SCHEMA: ${DB_SCHEMA:?error}
+      DB_USER: ${DB_USER:?error}
+      DB_PASSWORD: ${DB_PASSWORD:?error}
+    env_file:
+      - .env
+    networks:
+      - devnet
+
+  frontend:
+    image: template-frontend:latest
+    environment:
+      API_URL: ${API_URL:?error}
+      DB_HOST: ${DB_HOST:?error}
+      DB_PORT: ${DB_PORT:?error}
+      DB_NAME: ${DB_NAME:?error}
+      DB_SCHEMA: ${DB_SCHEMA:?error}
+      DB_USER: ${DB_USER:?error}
+      DB_PASSWORD: ${DB_PASSWORD:?error}
+      AUTH_SECRET: ${AUTH_SECRET:?error}
+      AUTH_DISCORD_ID: ${AUTH_DISCORD_ID:?error}
+      AUTH_DISCORD_SECRET: ${AUTH_DISCORD_SECRET:?error}
+      AUTH_TRUST_HOST: true
+      AUTH_URL: ${AUTH_URL:?error}
+      SMTP_HOST: ${SMTP_HOST:?error}
+      SMTP_PORT: ${SMTP_PORT:?error}
+      SMTP_SECURE: ${SMTP_SECURE:?error}
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
     networks:
       - devnet
 
@@ -272,8 +339,8 @@ services:
       # IMGPROXY_AIRBRAKE_ENVIRONMENT: "production"
 
 networks:
-  devnet:
-    external: true
+  template:
+    driver: bridge
 
 volumes:
   template-postgres:
