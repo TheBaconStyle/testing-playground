@@ -1,36 +1,34 @@
-import { db } from "db";
-import { type NextRequest, NextResponse } from "next/server";
+import { db } from 'db';
+import { type NextRequest, NextResponse } from 'next/server';
 
-export const runtime = "nodejs";
+export const runtime = 'nodejs';
 
 export async function GET(req: NextRequest) {
-	const sessionToken = req.cookies.get("sessionToken");
+  const sessionToken = req.cookies.get('sessionToken');
 
-	const redirectUrl = req.nextUrl.clone();
+  const redirectUrl = req.nextUrl.clone();
 
-	console.log(redirectUrl.href);
+  redirectUrl.pathname = '/';
 
-	redirectUrl.pathname = "/";
+  if (sessionToken?.value) {
+    const callbackUrl = req.nextUrl.searchParams.get('callbackUrl');
 
-	if (sessionToken?.value) {
-		const callbackUrl = req.nextUrl.searchParams.get("callbackUrl");
+    const session = await db.query.sessions.findFirst({
+      where: (ses, { eq, and, gt }) =>
+        and(
+          eq(ses.sessionToken, sessionToken.value),
+          gt(ses.expires, new Date()),
+        ),
+    });
 
-		const session = await db.query.sessions.findFirst({
-			where: (ses, { eq, and, gt }) =>
-				and(
-					eq(ses.sessionToken, sessionToken.value),
-					gt(ses.expires, new Date()),
-				),
-		});
+    if (session && callbackUrl) {
+      redirectUrl.href = callbackUrl;
+    }
+  }
 
-		if (session && callbackUrl) {
-			redirectUrl.href = callbackUrl;
-		}
-	}
+  for (const k of Array.from(redirectUrl.searchParams.keys())) {
+    redirectUrl.searchParams.delete(k);
+  }
 
-	for (const k of Array.from(redirectUrl.searchParams.keys())) {
-		redirectUrl.searchParams.delete(k);
-	}
-
-	return NextResponse.redirect(redirectUrl.href, { headers: req.headers });
+  return NextResponse.redirect(redirectUrl.href, { headers: req.headers });
 }

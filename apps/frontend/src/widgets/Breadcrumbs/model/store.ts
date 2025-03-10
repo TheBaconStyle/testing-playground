@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { create } from "zustand";
+import { create } from 'zustand';
 
 export type CrumbPath = {
   href: string;
@@ -13,7 +13,7 @@ export type TBreadcrumbsStore = {
   setPaths: (newPaths: CrumbPath[]) => void;
   replacePathLabel: (
     href: string,
-    newSettings: Partial<Omit<CrumbPath, "href">>
+    newSettings: Partial<Omit<CrumbPath, 'href'>>,
   ) => void;
 };
 
@@ -23,7 +23,7 @@ export const useBreadcrumbs = create<TBreadcrumbsStore>((set) => ({
   replacePathLabel: (href, newSettings) =>
     set((state) => {
       const pathIndex = state.paths.findIndex((path) =>
-        path.href?.includes(href)
+        path.href?.includes(href),
       );
       return {
         paths: [

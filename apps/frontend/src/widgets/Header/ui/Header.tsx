@@ -1,8 +1,9 @@
-"use client";
+'use client';
 
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from "@mui/icons-material/Logout";
-import QuizIcon from "@mui/icons-material/Quiz";
+import { Person } from '@mui/icons-material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
+import QuizIcon from '@mui/icons-material/Quiz';
 import {
   AppBar,
   Avatar,
@@ -11,12 +12,12 @@ import {
   Menu,
   Link as MuiLink,
   Toolbar,
-  Typography
-} from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
-import { signIn, signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+  Typography,
+} from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { useCallback, useRef, useState } from 'react';
 
 export function Header() {
   const session = useSession();
@@ -25,13 +26,10 @@ export function Header() {
 
   const [isMenuOpen, setMenuOpen] = useState(false);
 
-  const handleMenuItemClick = useCallback(
-    (action?: () => void) => {
-      action?.();
-      setMenuOpen(false);
-    },
-    []
-  );
+  const handleMenuItemClick = useCallback((action?: () => void) => {
+    action?.();
+    setMenuOpen(false);
+  }, []);
 
   return (
     <AppBar component="header" position="sticky">
@@ -40,10 +38,10 @@ export function Header() {
           <MuiLink
             component={Link}
             href="/"
-            sx={{ textDecoration: "none", color: "inherit" }}
+            sx={{ textDecoration: 'none', color: 'inherit' }}
             variant="h4"
           >
-            <QuizIcon sx={{ fontSize: "inherit", alignSelf: "center" }} /> Brand
+            <QuizIcon sx={{ fontSize: 'inherit', alignSelf: 'center' }} /> Brand
           </MuiLink>
         </Box>
         {!session.data && (
@@ -58,9 +56,9 @@ export function Header() {
               ref={menuAnchor}
               sx={{
                 gap: 1,
-                flexDirection: "row",
-                alignItems: "center",
-                color: "inherit",
+                flexDirection: 'row',
+                alignItems: 'center',
+                color: 'inherit',
               }}
               onClick={() => {
                 setMenuOpen(!isMenuOpen);
@@ -69,15 +67,20 @@ export function Header() {
               {session.data?.user?.image && (
                 <Avatar src={session.data?.user?.image} />
               )}
+              {!session.data.user?.image && (
+                <Avatar>
+                  <Person />
+                </Avatar>
+              )}
               <Typography variant="body1">
-                {session.data?.user?.name}
+                {session.data?.user?.name ?? 'user'}
               </Typography>
             </Button>
             <Menu
               open={isMenuOpen}
               anchorEl={menuAnchor.current}
               onClose={() => setMenuOpen(false)}
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
               <MenuItem
                 sx={{ gap: 1 }}
