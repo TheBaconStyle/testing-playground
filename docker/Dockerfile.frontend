@@ -12,7 +12,7 @@ COPY ../../packages/db/package.json ./packages/db/package.json
 
 COPY ../../packages/sdk/package.json ./packages/sdk/package.json
 
-RUN npm i
+RUN npm ci
 
 COPY ../../apps/frontend ./apps/frontend
 

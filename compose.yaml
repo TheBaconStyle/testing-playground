@@ -1,16 +1,16 @@
 services:
-  nginxproxymanager:
-    image: "jc21/nginx-proxy-manager:latest"
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "81:81"
-      - "443:443"
-    volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
-    networks:
-      - devnet
+  # nginxproxymanager:
+  #   image: "jc21/nginx-proxy-manager:latest"
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "81:81"
+  #     - "443:443"
+  #   volumes:
+  #     - ./data:/data
+  #     - ./letsencrypt:/etc/letsencrypt
+  #   networks:
+  #     - devnet
   mail:
     restart: on-failure
     image: haravich/fake-smtp-server
@@ -36,7 +36,7 @@ services:
     networks:
       - devnet
 
-  migrator:
+  migration:
     image: template-migration:latest
     environment:
       DB_HOST: ${DB_HOST:?error}
@@ -339,8 +339,8 @@ services:
       # IMGPROXY_AIRBRAKE_ENVIRONMENT: "production"
 
 networks:
-  template:
-    driver: bridge
+  devnet:
+    external: true
 
 volumes:
   template-postgres:
