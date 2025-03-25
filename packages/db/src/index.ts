@@ -1,4 +1,4 @@
-import { Pool } from "pg";
+import { Client } from "pg";
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "./schema";
 
@@ -14,7 +14,7 @@ export function createConnectionString(
   return `postgres://${user}:${password}@${host}:${port}/${dbName}`;
 }
 
-const connectionCLient = new Pool({ connectionString });
+const connectionCLient = new Client({ connectionString });
 
 export * as schema from "./schema";
 
@@ -26,6 +26,6 @@ export function createDrizzleDB(
   ...args: Parameters<typeof createConnectionString>
 ) {
   const connectionString = createConnectionString(...args);
-  const connectionPool = new Pool({ connectionString });
+  const connectionPool = new Client({ connectionString });
   return drizzle(connectionPool, { schema });
 }

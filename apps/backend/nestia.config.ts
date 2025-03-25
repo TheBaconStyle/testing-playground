@@ -2,13 +2,12 @@ import { INestiaConfig } from '@nestia/sdk';
 
 const NESTIA_CONFIG: INestiaConfig = {
   input: 'src/**/*.controller.ts',
-  output: './src/sdk',
+  output: '../../packages/sdk/src',
   swagger: {
     output: 'src/swagger/swagger.json',
     beautify: true,
     servers: [{ url: `http://localhost:5000` }],
   },
-  distribute: '../../packages/sdk',
   primitive: true,
   simulate: true,
   assert: true,

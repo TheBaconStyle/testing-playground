@@ -1,11 +1,11 @@
+import { pathTest } from '@/shared/lib/url';
 import {
   type MiddlewareConfig,
   type NextRequest,
   NextResponse,
 } from 'next/server';
-import { pathTest } from '@/shared/lib/url';
 
-const publicPaths = ['/', '/auth/*'];
+const publicPaths = ['/', '/auth/*', '/assets/*'];
 
 export const middleware = async (request: NextRequest) => {
   const requestUrl = request.nextUrl.clone();
@@ -15,13 +15,13 @@ export const middleware = async (request: NextRequest) => {
   const sessionToken = request.cookies.get('example-session');
 
   if (!isPublicPath && !sessionToken?.value) {
-    const sessionUrl = requestUrl.clone();
+    const redirectUrl = requestUrl.clone();
 
-    sessionUrl.pathname = '/api/session';
+    redirectUrl.searchParams.set('callbackUrl', redirectUrl.href);
 
-    sessionUrl.searchParams.set('callbackUrl', sessionUrl.href);
+    redirectUrl.pathname = '/api/session';
 
-    return NextResponse.redirect(sessionUrl, { headers: request.headers });
+    return NextResponse.redirect(redirectUrl, { headers: request.headers });
   }
 
   return NextResponse.next({ request });

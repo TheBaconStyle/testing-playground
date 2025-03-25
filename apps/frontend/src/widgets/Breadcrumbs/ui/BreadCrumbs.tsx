@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Breadcrumbs, type BreadcrumbsProps, Typography } from "@mui/material";
-import { usePathname } from "next/navigation";
-import React, { useEffect, useMemo } from "react";
-import { type CrumbPath, useBreadcrumbs } from "../model/store";
-import { Crumb } from "./Crumb";
+import { Breadcrumbs, type BreadcrumbsProps, Typography } from '@mui/material';
+import { usePathname } from 'next/navigation';
+import React, { useEffect, useMemo } from 'react';
+import { type CrumbPath, useBreadcrumbs } from '../model/store';
+import { Crumb } from './Crumb';
 
 export type TBreadcrumbsContainer = {
   basePath?: string;
@@ -12,18 +12,19 @@ export type TBreadcrumbsContainer = {
 } & BreadcrumbsProps;
 
 export function BreadCrumbs({
-  basePath = "/",
-  basePathLabel = "Главная",
+  basePath = '/',
+  basePathLabel = 'Главная',
   ...props
 }: TBreadcrumbsContainer) {
   const pathname = usePathname();
 
   const generatedBreadcrumbPaths: CrumbPath[] = useMemo(() => {
     const newPaths = pathname
-      .split("/")
+      .split('/')
+      .filter((item) => item !== basePath.replace('/', ''))
       .filter(Boolean)
       .map((path, index, paths) => ({
-        href: `/${paths.slice(0, index + 1).join("/")}`,
+        href: `/${paths.slice(0, index + 1).join('/')}`,
         label: path,
       }));
     return [
@@ -43,18 +44,20 @@ export function BreadCrumbs({
   const defaultPaths = paths.length === 0 ? generatedBreadcrumbPaths : paths;
 
   return (
-    <Breadcrumbs {...props} sx={{ ...props.sx, userSelect: "none" }}>
-      {defaultPaths.map(({ label, href, isLink }, index, arr) => (
-        <React.Fragment key={href}>
-          {index !== arr.length - 1 && !!isLink ? (
-            <Crumb href={href} underline="hover">
+    <Breadcrumbs
+      {...props}
+      sx={{ ...props.sx, userSelect: 'none', color: 'inherit' }}
+    >
+      {defaultPaths.map(({ label, href, isLink }, index, arr) => {
+        if (index !== arr.length - 1 && !!isLink) {
+          return (
+            <Crumb href={href} underline="hover" key={href}>
               {label}
             </Crumb>
-          ) : (
-            <Typography>{label}</Typography>
-          )}
-        </React.Fragment>
-      ))}
+          );
+        }
+        return <Typography key={href}>{label}</Typography>;
+      })}
     </Breadcrumbs>
   );
 }

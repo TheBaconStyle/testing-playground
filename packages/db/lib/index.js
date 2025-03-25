@@ -43,12 +43,12 @@ exports.connectionString = `postgres://${process.env.DB_USER}:${process.env.DB_P
 function createConnectionString(user, password, host, port, dbName) {
     return `postgres://${user}:${password}@${host}:${port}/${dbName}`;
 }
-const connectionCLient = new pg_1.Pool({ connectionString: exports.connectionString });
+const connectionCLient = new pg_1.Client({ connectionString: exports.connectionString });
 exports.schema = __importStar(require("./schema"));
 exports.db = (0, node_postgres_1.drizzle)({ client: connectionCLient, schema });
 function createDrizzleDB(...args) {
     const connectionString = createConnectionString(...args);
-    const connectionPool = new pg_1.Pool({ connectionString });
+    const connectionPool = new pg_1.Client({ connectionString });
     return (0, node_postgres_1.drizzle)(connectionPool, { schema });
 }
 //# sourceMappingURL=index.js.map

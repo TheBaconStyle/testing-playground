@@ -8,11 +8,11 @@ export async function GET(req: NextRequest) {
 
   const redirectUrl = req.nextUrl.clone();
 
-  redirectUrl.pathname = '/';
+  const callbackParam = req.nextUrl.searchParams.get('callbackUrl');
+
+  console.log(callbackParam);
 
   if (sessionToken?.value) {
-    const callbackUrl = req.nextUrl.searchParams.get('callbackUrl');
-
     const session = await db.query.sessions.findFirst({
       where: (ses, { eq, and, gt }) =>
         and(
@@ -21,14 +21,26 @@ export async function GET(req: NextRequest) {
         ),
     });
 
-    if (session && callbackUrl) {
-      redirectUrl.href = callbackUrl;
+    if (session && callbackParam) {
+      redirectUrl.href = callbackParam;
     }
   }
 
   for (const k of Array.from(redirectUrl.searchParams.keys())) {
     redirectUrl.searchParams.delete(k);
   }
+
+  redirectUrl.pathname = 'auth/signin';
+
+  const callbackUrl = req.nextUrl.clone();
+
+  callbackUrl.pathname = '/';
+
+  if (callbackParam) {
+    callbackUrl.href = callbackParam;
+  }
+
+  redirectUrl.searchParams.set('callbackUrl', callbackUrl.href);
 
   return NextResponse.redirect(redirectUrl.href, { headers: req.headers });
 }

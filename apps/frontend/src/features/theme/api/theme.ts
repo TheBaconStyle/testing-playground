@@ -1,14 +1,14 @@
-"use server";
+'use server';
 
-import { cookies } from "next/headers";
+import { cookies } from 'next/headers';
 
 export async function setTheme(theme: string) {
-  const userCookies = cookies();
-  userCookies.set("app-theme", theme);
+  const userCookies = await cookies();
+  userCookies.set('app-theme', theme);
 }
 
 export async function getTheme() {
-  const reqCookies = cookies();
+  const reqCookies = await cookies();
 
-  return (reqCookies.get("app-theme")?.value ?? "light") as "light" | "dark";
+  return (reqCookies.get('app-theme')?.value ?? 'light') as 'light' | 'dark';
 }

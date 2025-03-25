@@ -1,25 +1,25 @@
-import { auth } from "@/features/auth/model";
-import { EmailPasswordlessSignIn } from "@/features/auth/ui/EmailPasswordlessSignin";
-import { SocialsSignIn } from "@/features/auth/ui/SocialsSignIn";
-import { Divider, Stack, Typography } from "@mui/material";
-import { redirect } from "next/navigation";
+import { auth } from '@/features/auth/model';
+import { EmailSignIn } from '@/features/auth/ui/EmailSignIn';
+import { SocialsSignIn } from '@/features/auth/ui/SocialsSignIn';
+import { Divider, Stack, Typography } from '@mui/material';
+import { redirect } from 'next/navigation';
 
-export default async function SignInPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
+export default async function SignInPage(props: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const session = await auth();
 
+  const searchParams = await props.searchParams;
+
   if (session) {
-    const callbackUrl = searchParams.callbackUrl ?? "/";
+    const callbackUrl = searchParams.callbackUrl ?? '/';
     return redirect(callbackUrl);
   }
 
   return (
-    <Stack sx={{ margin: "auto", gap: 3 }} width={600}>
+    <Stack sx={{ margin: 'auto', gap: 3 }} width={600}>
       <Typography variant="h5">Вход в систему</Typography>
-      <EmailPasswordlessSignIn />
+      <EmailSignIn />
       <Divider variant="middle">или</Divider>
       <SocialsSignIn />
     </Stack>

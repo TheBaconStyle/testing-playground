@@ -29,7 +29,7 @@ export default async function RootLayout({
             minHeight: '100vh',
           }}
         >
-          <NextThemeProvider>
+          <NextThemeProvider defaultTheme={userTheme}>
             <MuiThemeProvider theme={userTheme}>
               <NotificationProvider>{children}</NotificationProvider>
             </MuiThemeProvider>

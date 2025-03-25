@@ -17,7 +17,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "ts-patch install && typia patch",
-    "build:swagger": "dotenvx run -- npx nestia swagger"
+    "build:swagger": "dotenvx run -- npx nestia swagger",
+    "generate:sdk": "dotenvx run -- npx nestia sdk"
   },
   "dependencies": {
     "@knaadh/nestjs-drizzle-pg": "^1.2.0",

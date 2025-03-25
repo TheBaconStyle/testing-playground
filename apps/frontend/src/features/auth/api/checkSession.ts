@@ -1,15 +1,15 @@
-"use server";
+'use server';
 
-import { db } from "db";
-import { cookies } from "next/headers";
+import { db } from 'db';
+import { cookies } from 'next/headers';
 
 export async function checkSession() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
-  const sessionToken = await cookieStore.get("example-session");
+  const sessionToken = cookieStore.get('example-session');
 
   if (!sessionToken?.value) {
-    return { success: false as const, message: "Session does not exist" };
+    return { success: false as const, message: 'Session does not exist' };
   }
 
   const session = await db.query.sessions.findFirst({
@@ -17,7 +17,7 @@ export async function checkSession() {
   });
 
   if (!session) {
-    return { success: false as const, message: "Session does not exist" };
+    return { success: false as const, message: 'Session does not exist' };
   }
 
   return { success: true as const };

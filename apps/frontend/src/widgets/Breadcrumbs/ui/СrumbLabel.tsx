@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { type CrumbPath, useBreadcrumbs } from "../model/store";
+import { useEffect } from 'react';
+import { type CrumbPath, useBreadcrumbs } from '../model/store';
 
-export type TBReadcrumb = {} & CrumbPath;
+export type TCrumbLabel = {} & CrumbPath;
 
-export default function CrumbLabel({ label, href, isLink }: TBReadcrumb) {
+export default function CrumbLabel({ label, href, isLink }: TCrumbLabel) {
   const replasePathLabel = useBreadcrumbs((b) => b.replacePathLabel);
 
   useEffect(() => {

@@ -6,8 +6,9 @@ const imgproxyLoader: ImageLoader = ({ src, width, quality = 75 }) =>
     .resize({ type: ResizeType.FIT, width })
     .quality(quality)
     .build({
-      path: `${process.env.S3_URL}/${src}`,
+      path: src,
       baseUrl: process.env.NEXT_PUBLIC_IMGPROXY_URL,
+      plain: true,
     });
 
 export default imgproxyLoader;
