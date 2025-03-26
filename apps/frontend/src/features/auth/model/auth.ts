@@ -32,6 +32,8 @@ const authConfig: NextAuthConfig = {
         provider: { server, from },
         identifier,
       }) {
+        console.log('SENDING SIGN IN EMAIL');
+
         const transport = createTransport(server);
 
         await transport.verify();

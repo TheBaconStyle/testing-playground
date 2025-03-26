@@ -7,8 +7,7 @@
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev": "concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
     "build:sdk": "npm run build --workspace=sdk",
-    "build:swagger": "npm run build:swagger --workspace=backend",
-    "prepare": "ts-patch install && typia patch"
+    "build:swagger": "npm run build:swagger --workspace=backend"
   },
   "keywords": [],
   "author": "",
@@ -21,10 +20,5 @@
   "devDependencies": {
     "@dotenvx/dotenvx": "^1.26.0",
     "concurrently": "^9.0.1"
-  },
-  "dependencies": {
-    "nuqs": "^2.4.1",
-    "ts-patch": "^3.3.0",
-    "typia": "^8.0.0"
   }
 }

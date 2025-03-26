@@ -4,6 +4,7 @@ import MuiLink from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Link from 'next/link';
 import type { PropsWithChildren } from 'react';
+import { ProfileLink } from '../../widgets/Header/ui/ProfileLink';
 
 export default async function GeneralLayout({ children }: PropsWithChildren) {
   return (

@@ -10,6 +10,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Link from 'next/link';
 import { PropsWithChildren } from 'react';
 import { ThemeSwitch } from './ThemeSwitch';
+import { ProfileLink } from './ProfileLink';
 
 type THeader = PropsWithChildren<AppBarProps>;
 
@@ -53,6 +54,7 @@ export async function Header({ children, ...appBarProps }: THeader) {
           {children}
         </Stack>
         <ThemeSwitch currentTheme={currentTheme} />
+        <ProfileLink />
 
         {session && (
           <Button

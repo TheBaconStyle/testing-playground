@@ -1,13 +1,20 @@
-import { TypedRoute } from '@nestia/core';
-import { Controller, Headers } from '@nestjs/common';
+import { Input, Query, Router } from 'nestjs-trpc';
+import { z } from 'zod';
 import { AuthService } from './auth.service';
 
-@Controller('api/v1/auth')
+@Router({ alias: 'auth' })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @TypedRoute.Post()
-  async authorize(@Headers('Authorization') sessionToken: string) {
-    return this.authService.isUserSessionExist(sessionToken);
+  @Query({
+    input: z.object({
+      token: z.string(),
+    }),
+  })
+  async authorize(@Input('token') token: string) {
+    // const sessionToken = context.req.headers.authorization ?? '';
+    return {
+      isAuthorized: await this.authService.isUserSessionExist(token),
+    };
   }
 }

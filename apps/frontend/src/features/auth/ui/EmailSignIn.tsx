@@ -20,7 +20,10 @@ export function EmailSignIn() {
         (error) => console.log(error),
       )}
     >
-      <TextField {...register('email')} label="Адрес эл. почты" />
+      <TextField
+        {...register('email', { required: true })}
+        label="Адрес эл. почты"
+      />
       <Button type="submit" variant="contained">
         войти с адресом эл. почты
       </Button>
