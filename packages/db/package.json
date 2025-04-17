@@ -1,14 +1,25 @@
 {
   "name": "db",
   "version": "1.0.0",
-  "main": "./lib/index.js",
-  "typings": "./lib/index.d.ts",
+  "exports": {
+    "./source/*": "./src/*.ts",
+    "./dist/*": "./lib/*.js"
+  },
+  "typesVersions": {
+    "*": {
+      "dist/*": [
+        "./lib/*.d.ts"
+      ]
+    }
+  },
+  "type": "commonjs",
   "scripts": {
     "generate": "dotenvx run -- drizzle-kit generate",
     "migrate": "dotenvx run -- drizzle-kit migrate",
     "drop": "dotenvx run -- drizzle-kit drop",
     "push": "dotenvx run -- drizzle-kit push",
-    "build": "tsc",
+    "pull": "dotenvx run -- drizzle-kit pull",
+    "build": "rimraf lib && tsc",
     "build:migration": "ncc build ./src/migration.ts -o dist -m"
   },
   "keywords": [],
@@ -17,7 +28,6 @@
   "description": "",
   "dependencies": {
     "drizzle-orm": "^0.36.4",
-    "next-auth": "^5.0.0-beta.25",
     "pg": "^8.13.1"
   },
   "devDependencies": {

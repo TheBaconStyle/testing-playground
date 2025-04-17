@@ -6,7 +6,10 @@ import { TrpcContext } from './trpc.context';
 @Module({
   imports: [
     TRPCModule.forRoot({
-      autoSchemaFile: 'src/sdk',
+      autoSchemaFile:
+        process.env.NODE_ENV !== 'production'
+          ? '../../apps/frontend/src/shared/sdk/lib'
+          : undefined,
       context: TrpcContext,
     }),
   ],

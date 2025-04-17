@@ -1,4 +1,3 @@
-import type { AdapterAccountType } from "next-auth/adapters";
 export declare const dbSchema: import("drizzle-orm/pg-core").PgSchema<string>;
 export declare const users: import("drizzle-orm/pg-core").PgTableWithColumns<{
     name: "user";
@@ -124,7 +123,7 @@ export declare const accounts: import("drizzle-orm/pg-core").PgTableWithColumns<
             tableName: "account";
             dataType: "string";
             columnType: "PgText";
-            data: AdapterAccountType;
+            data: string;
             driverParam: string;
             notNull: true;
             hasDefault: false;
@@ -207,10 +206,10 @@ export declare const accounts: import("drizzle-orm/pg-core").PgTableWithColumns<
         expires_at: import("drizzle-orm/pg-core").PgColumn<{
             name: "expires_at";
             tableName: "account";
-            dataType: "number";
-            columnType: "PgInteger";
-            data: number;
-            driverParam: string | number;
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
             notNull: false;
             hasDefault: false;
             isPrimaryKey: false;
@@ -360,11 +359,11 @@ export declare const verificationTokens: import("drizzle-orm/pg-core").PgTableWi
     name: "verificationToken";
     schema: string;
     columns: {
-        identifier: import("drizzle-orm/pg-core").PgColumn<{
-            name: "identifier";
+        userId: import("drizzle-orm/pg-core").PgColumn<{
+            name: "userId";
             tableName: "verificationToken";
             dataType: "string";
-            columnType: "PgText";
+            columnType: "PgUUID";
             data: string;
             driverParam: string;
             notNull: true;
@@ -372,7 +371,7 @@ export declare const verificationTokens: import("drizzle-orm/pg-core").PgTableWi
             isPrimaryKey: false;
             isAutoincrement: false;
             hasRuntimeDefault: false;
-            enumValues: [string, ...string[]];
+            enumValues: undefined;
             baseColumn: never;
             identity: undefined;
             generated: undefined;
@@ -386,7 +385,7 @@ export declare const verificationTokens: import("drizzle-orm/pg-core").PgTableWi
             driverParam: string;
             notNull: true;
             hasDefault: false;
-            isPrimaryKey: false;
+            isPrimaryKey: true;
             isAutoincrement: false;
             hasRuntimeDefault: false;
             enumValues: [string, ...string[]];
@@ -413,6 +412,9 @@ export declare const verificationTokens: import("drizzle-orm/pg-core").PgTableWi
         }, {}, {}>;
     };
     dialect: "pg";
+}>;
+export declare const verificationTokensRelations: import("drizzle-orm").Relations<"verificationToken", {
+    user: import("drizzle-orm").One<"user", true>;
 }>;
 export declare const authenticators: import("drizzle-orm/pg-core").PgTableWithColumns<{
     name: "authenticator";

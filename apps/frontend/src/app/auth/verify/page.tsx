@@ -1,8 +1,8 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack, Typography } from '@mui/material';
 
-export default function EmailVerifyPage() {
+export default async function EmailVerifyPage() {
   return (
-    <Stack sx={{ margin: "auto", gap: 3 }} width={600}>
+    <Stack sx={{ margin: 'auto', gap: 3 }} width={600}>
       <Typography variant="h5">Вход в учетную запись</Typography>
       <Typography>
         На указанный адрес электронной почты было было выслано письмо с

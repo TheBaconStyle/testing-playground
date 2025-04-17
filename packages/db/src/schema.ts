@@ -8,7 +8,6 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import type { AdapterAccountType } from "next-auth/adapters";
 
 export const dbSchema = pgSchema(process.env.DB_SCHEMA!);
 
@@ -33,12 +32,12 @@ export const accounts = dbSchema.table(
     userId: uuid("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccountType>().notNull(),
+    type: text("type").notNull(),
     provider: text("provider").notNull(),
     providerAccountId: text("providerAccountId").notNull(),
     refresh_token: text("refresh_token"),
     access_token: text("access_token"),
-    expires_at: integer("expires_at"),
+    expires_at: timestamp("expires_at", { mode: "date" }),
     token_type: text("token_type"),
     scope: text("scope"),
     id_token: text("id_token"),
@@ -69,20 +68,22 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
 
-export const verificationTokens = dbSchema.table(
-  "verificationToken",
-  {
-    identifier: text("identifier").notNull(),
-    token: text("token").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
-  },
-  (verificationToken) => [
-    {
-      compositePk: primaryKey({
-        columns: [verificationToken.identifier, verificationToken.token],
-      }),
-    },
-  ]
+export const verificationTokens = dbSchema.table("verificationToken", {
+  userId: uuid("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  token: text("token").notNull().primaryKey(),
+  expires: timestamp("expires", { mode: "date" }).notNull(),
+});
+
+export const verificationTokensRelations = relations(
+  verificationTokens,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [verificationTokens.userId],
+      references: [users.id],
+    }),
+  })
 );
 
 export const authenticators = dbSchema.table(

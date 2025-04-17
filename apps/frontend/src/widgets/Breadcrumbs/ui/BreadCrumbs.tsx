@@ -4,7 +4,7 @@ import { Breadcrumbs, type BreadcrumbsProps, Typography } from '@mui/material';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useMemo } from 'react';
 import { type CrumbPath, useBreadcrumbs } from '../model/store';
-import { Crumb } from './Crumb';
+import { CrumbLink } from './CrumbLink';
 
 export type TBreadcrumbsContainer = {
   basePath?: string;
@@ -51,9 +51,9 @@ export function BreadCrumbs({
       {defaultPaths.map(({ label, href, isLink }, index, arr) => {
         if (index !== arr.length - 1 && !!isLink) {
           return (
-            <Crumb href={href} underline="hover" key={href}>
+            <CrumbLink href={href} underline="hover" key={href}>
               {label}
-            </Crumb>
+            </CrumbLink>
           );
         }
         return <Typography key={href}>{label}</Typography>;

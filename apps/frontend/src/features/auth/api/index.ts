@@ -1,1 +1,1 @@
-export * from "./checkSession";
+export * from './session';

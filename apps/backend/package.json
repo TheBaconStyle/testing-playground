@@ -5,9 +5,8 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-  "main": "src/sdk/server.ts",
   "scripts": {
-    "build": "rimraf dist && ncc build ./src/main.ts -o dist -m",
+    "build": "rimraf dist && ncc build ./src/main.ts -o dist -m -s -e trpc-panel",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "dotenvx run -- node dist",
     "dev": "dotenvx run -- nest start --watch",
@@ -16,9 +15,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "build:swagger": "dotenvx run -- npx nestia swagger",
-    "generate:sdk": "dotenvx run -- npx nestia sdk"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@knaadh/nestjs-drizzle-pg": "^1.2.0",
@@ -27,13 +24,14 @@
     "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
-    "@trpc/server": "^10.45.2",
+    "@trpc/server": "^11.0.2",
     "drizzle-orm": "^0.36.4",
+    "minio": "^8.0.5",
     "nestjs-trpc": "^1.6.1",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "trpc-panel": "^1.3.4",
+    "trpc-ui": "^1.0.15",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -44,7 +42,8 @@
     "@nestjs/testing": "^10.0.0",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.2",
-    "@types/node": "^20.3.1",
+    "@types/node": "^20.17.28",
+    "@types/pg": "^8.11.11",
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",

@@ -7,7 +7,13 @@
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev": "concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
     "build:sdk": "npm run build --workspace=sdk",
-    "build:swagger": "npm run build:swagger --workspace=backend"
+    "build:swagger": "npm run build:swagger --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build": "concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run build:backend\" \"npm run build:frontend\"",
+    "start:frontend": "npm run start --workspace=frontend",
+    "start:backend": "npm run start --workspace=backend",
+    "start": "concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run start:backend\" \"npm run start:frontend\""
   },
   "keywords": [],
   "author": "",
@@ -20,5 +26,8 @@
   "devDependencies": {
     "@dotenvx/dotenvx": "^1.26.0",
     "concurrently": "^9.0.1"
+  },
+  "dependencies": {
+    "react-toastify": "^11.0.5"
   }
 }

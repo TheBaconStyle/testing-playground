@@ -1,23 +1,22 @@
-import { auth } from '@/features/auth/model';
 import { getTheme } from '@/features/theme/api';
-import { Person } from '@mui/icons-material';
 import TodayIcon from '@mui/icons-material/Today';
-import { Avatar, Button, Typography } from '@mui/material';
 import AppBar, { AppBarProps } from '@mui/material/AppBar';
 import MuiLink from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import Link from 'next/link';
 import { PropsWithChildren } from 'react';
-import { ThemeSwitch } from './ThemeSwitch';
 import { ProfileLink } from './ProfileLink';
+import { ThemeSwitch } from './ThemeSwitch';
+import { UserAuth } from './UserAuth';
+// import { auth } from '@/features/auth/lib';
 
 type THeader = PropsWithChildren<AppBarProps>;
 
 export async function Header({ children, ...appBarProps }: THeader) {
   const currentTheme = await getTheme();
 
-  const session = await auth();
+  // const session = await auth();
 
   return (
     <AppBar
@@ -54,9 +53,9 @@ export async function Header({ children, ...appBarProps }: THeader) {
           {children}
         </Stack>
         <ThemeSwitch currentTheme={currentTheme} />
-        <ProfileLink />
+        <UserAuth />
 
-        {session && (
+        {/* {session && (
           <Button
             LinkComponent={Link}
             href="/dashboard"
@@ -77,7 +76,7 @@ export async function Header({ children, ...appBarProps }: THeader) {
               {session.user?.name ?? 'user'}
             </Typography>
           </Button>
-        )}
+        )} */}
       </Toolbar>
     </AppBar>
   );

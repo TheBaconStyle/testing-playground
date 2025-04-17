@@ -1,15 +1,16 @@
-import { auth } from "@/features/auth/model/auth";
-import { SessionProvider } from "next-auth/react";
-import type { PropsWithChildren } from "react";
+'use client';
+import { createContext, use, type PropsWithChildren } from 'react';
+import { SessionValidationResult } from '../lib/session';
 
-/**
- * AuthProvider component provides authentication context to its children components.
- *
- * @param {PropsWithChildren} props - The props object containing the children components.
- * @returns {JSX.Element} - The SessionProvider component with the session and children components.
- */
-export async function AuthProvider({ children }: PropsWithChildren) {
-  const session = await auth();
+const AuthContext = createContext<SessionValidationResult>({
+  user: null,
+  session: null,
+});
 
-  return <SessionProvider session={session}>{children}</SessionProvider>;
+type TAuthProvider = PropsWithChildren<SessionValidationResult>;
+
+export function AuthProvider({ children, ...result }: TAuthProvider) {
+  return <AuthContext.Provider value={result}>{children}</AuthContext.Provider>;
 }
+
+export const useAuth = () => use(AuthContext);

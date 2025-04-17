@@ -1,11 +1,16 @@
-import { All, Controller, Inject, OnModuleInit } from '@nestjs/common';
-import { AnyRouter } from '@trpc/server';
+import {
+  All,
+  Controller,
+  Inject,
+  MethodNotAllowedException,
+  OnModuleInit,
+} from '@nestjs/common';
 import { AppRouterHost } from 'nestjs-trpc';
-import { renderTrpcPanel } from 'trpc-panel';
+import { renderTrpcPanel } from 'trpc-ui';
 
 @Controller('trpc-panel')
 export class TrpcController implements OnModuleInit {
-  private appRouter!: AnyRouter;
+  private appRouter;
 
   constructor(
     @Inject(AppRouterHost) private readonly appRouterHost: AppRouterHost,
@@ -17,8 +22,10 @@ export class TrpcController implements OnModuleInit {
 
   @All()
   panel() {
-    return renderTrpcPanel(this.appRouter, {
-      url: 'http://localhost:5000/trpc',
-    });
+    if (process.env.NODE_ENV !== 'production')
+      return renderTrpcPanel(this.appRouter, {
+        url: 'http://localhost:5000/trpc',
+      });
+    throw new MethodNotAllowedException();
   }
 }

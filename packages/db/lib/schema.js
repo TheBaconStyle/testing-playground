@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticatorsRelations = exports.authenticators = exports.verificationTokens = exports.sessionsRelations = exports.sessions = exports.accountsRelations = exports.accounts = exports.usersRelations = exports.users = exports.dbSchema = void 0;
+exports.authenticatorsRelations = exports.authenticators = exports.verificationTokensRelations = exports.verificationTokens = exports.sessionsRelations = exports.sessions = exports.accountsRelations = exports.accounts = exports.usersRelations = exports.users = exports.dbSchema = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const pg_core_1 = require("drizzle-orm/pg-core");
 exports.dbSchema = (0, pg_core_1.pgSchema)(process.env.DB_SCHEMA);
@@ -21,12 +21,12 @@ exports.accounts = exports.dbSchema.table("account", {
     userId: (0, pg_core_1.uuid)("userId")
         .notNull()
         .references(() => exports.users.id, { onDelete: "cascade" }),
-    type: (0, pg_core_1.text)("type").$type().notNull(),
+    type: (0, pg_core_1.text)("type").notNull(),
     provider: (0, pg_core_1.text)("provider").notNull(),
     providerAccountId: (0, pg_core_1.text)("providerAccountId").notNull(),
     refresh_token: (0, pg_core_1.text)("refresh_token"),
     access_token: (0, pg_core_1.text)("access_token"),
-    expires_at: (0, pg_core_1.integer)("expires_at"),
+    expires_at: (0, pg_core_1.timestamp)("expires_at", { mode: "date" }),
     token_type: (0, pg_core_1.text)("token_type"),
     scope: (0, pg_core_1.text)("scope"),
     id_token: (0, pg_core_1.text)("id_token"),
@@ -52,16 +52,18 @@ exports.sessionsRelations = (0, drizzle_orm_1.relations)(exports.sessions, ({ on
     user: one(exports.users, { fields: [exports.sessions.userId], references: [exports.users.id] }),
 }));
 exports.verificationTokens = exports.dbSchema.table("verificationToken", {
-    identifier: (0, pg_core_1.text)("identifier").notNull(),
-    token: (0, pg_core_1.text)("token").notNull(),
+    userId: (0, pg_core_1.uuid)("userId")
+        .notNull()
+        .references(() => exports.users.id, { onDelete: "cascade" }),
+    token: (0, pg_core_1.text)("token").notNull().primaryKey(),
     expires: (0, pg_core_1.timestamp)("expires", { mode: "date" }).notNull(),
-}, (verificationToken) => [
-    {
-        compositePk: (0, pg_core_1.primaryKey)({
-            columns: [verificationToken.identifier, verificationToken.token],
-        }),
-    },
-]);
+});
+exports.verificationTokensRelations = (0, drizzle_orm_1.relations)(exports.verificationTokens, ({ one }) => ({
+    user: one(exports.users, {
+        fields: [exports.verificationTokens.userId],
+        references: [exports.users.id],
+    }),
+}));
 exports.authenticators = exports.dbSchema.table("authenticator", {
     credentialID: (0, pg_core_1.text)("credentialID").notNull().unique(),
     userId: (0, pg_core_1.uuid)("userId")

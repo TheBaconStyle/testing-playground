@@ -1,10 +1,11 @@
-import { Box } from '@mui/material';
-import type { Metadata } from 'next';
+import { auth } from '@/features/auth/api';
+import { AuthProvider } from '@/features/auth/ui';
+import { NotificationProvider } from '@/features/notifications/ui/NotificationProvider';
 import { getTheme } from '@/features/theme/api/theme';
-import { AuthProvider } from '@/features/auth/ui/AuthProvider';
 import { MuiThemeProvider } from '@/features/theme/ui/MuiThemeProvider';
 import { NextThemeProvider } from '@/features/theme/ui/NextThemeProvider';
-import { NotificationProvider } from '@/features/notifications/ui/NotificationProvider';
+import { Box } from '@mui/material';
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -18,9 +19,11 @@ export default async function RootLayout({
 }>) {
   const userTheme = await getTheme();
 
+  const authResult = await auth();
+
   return (
     <html lang="ru" suppressHydrationWarning>
-      <AuthProvider>
+      <AuthProvider {...authResult}>
         <Box
           component="body"
           sx={{

@@ -1,19 +1,19 @@
 'use client';
 
-import { Person } from '@mui/icons-material';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
-import { useSession, signIn, signOut } from 'next-auth/react';
-import { useCallback, useRef, useState } from 'react';
+import { useAuth } from '@/features/auth/ui';
+import Person from '@mui/icons-material/Person';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { Avatar, Button, Menu, MenuItem, Typography } from '@mui/material';
 import Link from 'next/link';
+import { useCallback, useRef, useState } from 'react';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { signOut } from '@/features/auth/api';
+import { useRouter } from 'next/navigation';
 
 export function UserAuth() {
-  const session = useSession();
+  const { user } = useAuth();
+
+  const router = useRouter();
 
   const menuAnchor = useRef<HTMLButtonElement>(null);
 
@@ -26,16 +26,17 @@ export function UserAuth() {
 
   return (
     <>
-      {!session.data && (
+      {!user && (
         <Button
           variant="outlined"
           sx={{ color: 'inherit', borderColor: 'inherit' }}
-          onClick={() => signIn()}
+          LinkComponent={Link}
+          href="/auth/signin"
         >
           Войти
         </Button>
       )}
-      {session.data && (
+      {user && (
         <>
           <Button
             tabIndex={0}
@@ -50,17 +51,13 @@ export function UserAuth() {
               setMenuOpen(!isMenuOpen);
             }}
           >
-            {session.data?.user?.image && (
-              <Avatar src={session.data?.user?.image} />
-            )}
-            {!session.data.user?.image && (
+            {user?.image && <Avatar src={user?.image} />}
+            {!user?.image && (
               <Avatar>
                 <Person />
               </Avatar>
             )}
-            <Typography variant="body1">
-              {session.data?.user?.name ?? 'user'}
-            </Typography>
+            <Typography variant="body1">{user?.name ?? 'user'}</Typography>
           </Button>
           <Menu
             open={isMenuOpen}
@@ -79,7 +76,11 @@ export function UserAuth() {
             </MenuItem>
             <MenuItem
               sx={{ gap: 1 }}
-              onClick={() => handleMenuItemClick(() => signOut())}
+              onClick={() =>
+                handleMenuItemClick(() =>
+                  signOut().then(() => router.refresh()),
+                )
+              }
             >
               <LogoutIcon /> Выход
             </MenuItem>

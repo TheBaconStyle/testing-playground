@@ -6,6 +6,8 @@ async function bootstrap() {
 
   app.enableCors();
 
+  // console.log('qwe');
+
   await app.listen(5000);
 }
 bootstrap();

@@ -64,7 +64,7 @@ services:
       AUTH_DISCORD_ID: ${AUTH_DISCORD_ID:?error}
       AUTH_DISCORD_SECRET: ${AUTH_DISCORD_SECRET:?error}
       AUTH_TRUST_HOST: true
-      AUTH_URL: ${AUTH_URL:?error}
+      NEXT_PUBLIC_DOMAIN: ${NEXT_PUBLIC_DOMAIN:?error}
       SMTP_HOST: ${SMTP_HOST:?error}
       SMTP_PORT: ${SMTP_PORT:?error}
       SMTP_SECURE: ${SMTP_SECURE:?error}

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DBType } from 'db';
+import { DBType } from 'db/dist/db';
 
 @Injectable()
 export class AuthService {

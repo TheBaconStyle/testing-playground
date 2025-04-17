@@ -1,22 +1,30 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,
   cleanDistDir: true,
   output: 'standalone',
   experimental: {
     viewTransition: true,
     serverActions: {
       allowedOrigins: [
-        'http://localhost:3000',
-        'https://www.baconcs.duckdns.org',
+        'localhost',
+        'localhost:3000',
+        'www.baconcs.duckdns.org',
+        '0bks9mkt-3000.inc1.devtunnels.ms',
+        '0bks9mkt-80.inc1.devtunnels.ms',
       ],
     },
   },
   images: {
     loader: 'custom',
-    loaderFile: './src/features/images/api/index.ts',
+    loaderFile: './src/shared/images/api/index.ts',
   },
+  allowedDevOrigins: [
+    'www.baconcs.duckdns.org',
+    'localhost',
+    '0bks9mkt-3000.inc1.devtunnels.ms',
+    '0bks9mkt-80.inc1.devtunnels.ms',
+  ],
 };
 
 export default nextConfig;
