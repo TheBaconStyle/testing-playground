@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 
-export default async function Home() {
+export default function Home() {
   return (
     <Box sx={{ px: 2, mb: 2 }}>
       <Box>

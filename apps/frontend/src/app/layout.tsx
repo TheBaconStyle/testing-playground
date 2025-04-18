@@ -1,11 +1,11 @@
 import { auth } from '@/features/auth/api';
 import { AuthProvider } from '@/features/auth/ui';
-import { NotificationProvider } from '@/features/notifications/ui/NotificationProvider';
 import { getTheme } from '@/features/theme/api/theme';
 import { MuiThemeProvider } from '@/features/theme/ui/MuiThemeProvider';
 import { NextThemeProvider } from '@/features/theme/ui/NextThemeProvider';
 import { Box } from '@mui/material';
 import type { Metadata } from 'next';
+import { NotificationProvider } from '@/features/notifications/ui/NotificationProvider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -34,7 +34,13 @@ export default async function RootLayout({
         >
           <NextThemeProvider defaultTheme={userTheme}>
             <MuiThemeProvider theme={userTheme}>
-              <NotificationProvider>{children}</NotificationProvider>
+              <NotificationProvider
+                autoHideDuration={5000}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                preventDuplicate
+              >
+                {children}
+              </NotificationProvider>
             </MuiThemeProvider>
           </NextThemeProvider>
         </Box>
