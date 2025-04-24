@@ -28,11 +28,11 @@
   "description": "",
   "dependencies": {
     "drizzle-orm": "^0.36.4",
-    "pg": "^8.13.1"
+    "pg": "^8.14.1"
   },
   "devDependencies": {
     "@dotenvx/dotenvx": "^1.24.5",
-    "@types/pg": "^8.11.10",
+    "@types/pg": "^8.11.13",
     "@vercel/ncc": "^0.38.3",
     "drizzle-kit": "^0.28.1",
     "rimraf": "^6.0.1",

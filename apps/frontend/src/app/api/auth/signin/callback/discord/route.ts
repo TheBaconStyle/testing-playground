@@ -1,5 +1,5 @@
-import { discord } from '@/features/auth/api/discord';
-import { db } from 'db/source/db';
+import { discord } from '@/features/auth/lib/discord';
+import { db } from '@/shared/db';
 import * as schema from 'db/source/schema';
 import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';

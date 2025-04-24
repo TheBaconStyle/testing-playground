@@ -1,44 +1,26 @@
-import { Discord } from 'arctic';
-import { z } from 'zod';
+'use server';
+import { discord } from '@/features/auth/lib/discord';
+import { generateState } from 'arctic';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-const imageBaseUrl = 'https://cdn.discordapp.com';
+export async function discordSignIn(callbackUrl: string) {
+  const state = generateState();
 
-const getUserUrl = 'https://discord.com/api/users/@me';
+  const scopes = ['email', 'identify'];
 
-const callbackUrl = `${process.env.AUTH_URL!}/signin/discord/callback`;
+  if (callbackUrl) {
+    const cookiesStore = await cookies();
 
-const signinUrl = `${process.env.AUTH_URL!}/signin/discord`;
+    cookiesStore.set('example-callback', callbackUrl, {
+      secure: true,
+      httpOnly: true,
+      sameSite: 'lax',
+      maxAge: 60 * 10,
+    });
+  }
 
-const scopes = ['identify', 'email'];
+  const url = discord.provider.createAuthorizationURL(state, null, scopes);
 
-const tokenType = 'Bearer';
-
-const accountSchema = z.object({
-  id: z.string(),
-  global_name: z.string(),
-  avatar: z.string(),
-  email: z.string(),
-});
-
-const providerType = 'oauth';
-
-const providerName = 'discord';
-
-const provider = new Discord(
-  process.env.AUTH_DISCORD_ID!,
-  process.env.AUTH_DISCORD_SECRET!,
-  callbackUrl,
-);
-
-export const discord = {
-  providerName,
-  providerType,
-  accountSchema,
-  imageBaseUrl,
-  getUserUrl,
-  provider,
-  callbackUrl,
-  signinUrl,
-  scopes,
-  tokenType,
-};
+  return redirect(url.toString());
+}

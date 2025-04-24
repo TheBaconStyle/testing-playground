@@ -2,7 +2,7 @@ import { buildHostUrl } from '@/shared/url/lib';
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
-import { db } from 'db/source/db';
+import { db } from '@/shared/db';
 import * as schema from 'db/source/schema';
 import { createSession, generateToken } from '@/features/auth/lib/session';
 import { eq } from 'drizzle-orm';

@@ -1,4 +1,4 @@
-import { db } from 'db/source/db';
+import { db } from '@/shared/db';
 import * as schema from 'db/source/schema';
 import { eq, InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { encodeBase32NoPadding, encodeHexLowerCase } from '@oslojs/encoding';

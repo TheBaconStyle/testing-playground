@@ -1,11 +1,6 @@
-import {
-  createSession,
-  generateToken,
-  registerSession,
-} from '@/features/auth/lib/session';
+import { registerSession } from '@/features/auth/lib/session';
 import { applyEmailVerificationToken } from '@/shared/email/lib/email';
 import { buildHostUrl } from '@/shared/url/lib';
-import { db, schema } from 'db';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 

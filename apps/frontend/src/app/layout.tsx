@@ -1,4 +1,4 @@
-import { auth } from '@/features/auth/api';
+import { auth } from '@/features/auth/api/session';
 import { AuthProvider } from '@/features/auth/ui';
 import { getTheme } from '@/features/theme/api/theme';
 import { MuiThemeProvider } from '@/features/theme/ui/MuiThemeProvider';
