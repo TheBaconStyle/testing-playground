@@ -6,7 +6,7 @@ import {
 } from '@/shared/email/lib/email';
 import { renderToHTML } from '@/views/email/ui/SignInEmail';
 import { db } from '@/shared/db';
-import * as schema from 'db/source/schema';
+import * as schema from 'db/schema';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -29,7 +29,7 @@ export async function emailSignIn(email: string, callbackUrl: string) {
 
   const hostUrl = new URL(process.env.AUTH_URL!);
 
-  hostUrl.pathname = 'api/auth/signin/email/callback';
+  hostUrl.pathname = 'api/auth/signin/callback/email';
 
   hostUrl.searchParams.set('token', dbToken.token);
 

@@ -2,17 +2,15 @@
   "name": "db",
   "version": "1.0.0",
   "exports": {
-    "./source/*": "./src/*.ts",
-    "./dist/*": "./lib/*.js"
-  },
-  "typesVersions": {
-    "*": {
-      "dist/*": [
-        "./lib/*.d.ts"
-      ]
+    ".": {
+      "node": "./lib/db.js",
+      "types": "./lib/db.d.ts"
+    },
+    "./schema": {
+      "node": "./lib/schema.js",
+      "types": "./lib/schema.d.ts"
     }
   },
-  "type": "commonjs",
   "scripts": {
     "generate": "dotenvx run -- drizzle-kit generate",
     "migrate": "dotenvx run -- drizzle-kit migrate",
@@ -20,22 +18,23 @@
     "push": "dotenvx run -- drizzle-kit push",
     "pull": "dotenvx run -- drizzle-kit pull",
     "build": "rimraf lib && tsc",
-    "build:migration": "ncc build ./src/migration.ts -o dist -m"
+    "build:migration": "ncc build ./src/migration.ts -o build -m",
+    "dev": "tsc --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "drizzle-orm": "^0.36.4",
-    "pg": "^8.14.1"
+    "drizzle-orm": "^0.43.1",
+    "pg": "^8.15.6"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "^1.24.5",
-    "@types/pg": "^8.11.13",
+    "@dotenvx/dotenvx": "^1.43.0",
+    "@types/pg": "^8.15.1",
     "@vercel/ncc": "^0.38.3",
-    "drizzle-kit": "^0.28.1",
+    "drizzle-kit": "^0.31.1",
     "rimraf": "^6.0.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   }
 }

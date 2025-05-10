@@ -1,8 +1,8 @@
 import { DrizzlePGModule } from '@knaadh/nestjs-drizzle-pg';
 import { Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { createConnectionString } from 'db/dist/db';
-import * as schema from 'db/dist/schema';
+import { createConnectionString } from 'db';
+import * as schema from 'db/schema';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TrpcModule } from './trpc/trpc.module';

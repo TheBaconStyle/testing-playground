@@ -1,5 +1,5 @@
 import { db } from '@/shared/db';
-import * as schema from 'db/source/schema';
+import * as schema from 'db/schema';
 import { eq, InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { encodeBase32NoPadding, encodeHexLowerCase } from '@oslojs/encoding';
 import { sha256 } from '@oslojs/crypto/sha2';

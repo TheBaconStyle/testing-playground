@@ -1,5 +1,5 @@
-import { createConnectionString } from 'db/source/db';
-import * as schema from 'db/source/schema';
+import { createConnectionString } from 'db';
+import * as schema from 'db/schema';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 

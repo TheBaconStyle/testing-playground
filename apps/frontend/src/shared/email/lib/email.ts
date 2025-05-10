@@ -1,6 +1,6 @@
 import { generateToken } from '@/features/auth/lib/session';
-import { db } from 'db/source/db';
-import { verificationTokens } from 'db/source/schema';
+import { db } from '../../db';
+import { verificationTokens } from 'db/schema';
 import { eq } from 'drizzle-orm';
 import { createTransport } from 'nodemailer';
 
