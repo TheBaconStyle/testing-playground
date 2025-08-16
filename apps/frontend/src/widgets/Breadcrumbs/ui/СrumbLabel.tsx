@@ -1,16 +1,20 @@
 'use client';
 
-import { useEffect } from 'react';
-import { type CrumbPath, useBreadcrumbs } from '../model/store';
+import { useEffect, useRef } from 'react';
+import { type CrumbPath, useBreadCrumbs } from '../lib';
 
 export type TCrumbLabel = {} & CrumbPath;
 
 export default function CrumbLabel({ label, href, isLink }: TCrumbLabel) {
-  const replasePathLabel = useBreadcrumbs((b) => b.replacePathLabel);
+  const { replacePathLabel, paths } = useBreadCrumbs();
+
+  const isReplaced = useRef(false);
 
   useEffect(() => {
-    replasePathLabel(href, { label, isLink });
-  }, [label, href, replasePathLabel, isLink]);
+    if (!isReplaced.current) {
+      isReplaced.current = replacePathLabel(href, { label, isLink });
+    }
+  }, [label, href, isLink, paths, replacePathLabel]);
 
   return null;
 }

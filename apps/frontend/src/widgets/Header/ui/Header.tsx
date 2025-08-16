@@ -1,22 +1,20 @@
 import { getTheme } from '@/features/theme/api';
-import TodayIcon from '@mui/icons-material/Today';
+import { Today as TodayIcon } from '@mui/icons-material';
 import AppBar, { AppBarProps } from '@mui/material/AppBar';
 import MuiLink from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import Link from 'next/link';
 import { PropsWithChildren } from 'react';
-import { ProfileLink } from './ProfileLink';
 import { ThemeSwitch } from './ThemeSwitch';
-import { UserAuth } from './UserAuth';
-// import { auth } from '@/features/auth/lib';
+import { apiAuthClient } from '@/features/auth/api/auth';
 
 type THeader = PropsWithChildren<AppBarProps>;
 
 export async function Header({ children, ...appBarProps }: THeader) {
   const currentTheme = await getTheme();
 
-  // const session = await auth();
+  const authResult = await apiAuthClient.getSession();
 
   return (
     <AppBar
@@ -49,34 +47,10 @@ export async function Header({ children, ...appBarProps }: THeader) {
             />
             Habbins
           </MuiLink>
-
           {children}
+          {authResult.data?.user.name}
         </Stack>
         <ThemeSwitch currentTheme={currentTheme} />
-        <UserAuth />
-
-        {/* {session && (
-          <Button
-            LinkComponent={Link}
-            href="/dashboard"
-            sx={{
-              gap: 1,
-              flexDirection: 'row',
-              alignItems: 'center',
-              color: 'inherit',
-            }}
-          >
-            {session.user?.image && <Avatar src={session.user?.image} />}
-            {!session.user?.image && (
-              <Avatar>
-                <Person />
-              </Avatar>
-            )}
-            <Typography variant="body1">
-              {session.user?.name ?? 'user'}
-            </Typography>
-          </Button>
-        )} */}
       </Toolbar>
     </AppBar>
   );

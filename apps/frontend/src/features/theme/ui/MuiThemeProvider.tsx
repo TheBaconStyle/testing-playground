@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
-import { themeFont } from "@/features/theme/model/theme";
-import { type PropsWithChildren, useMemo } from "react";
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import { themeFont } from '@/features/theme/lib/theme';
+import { type PropsWithChildren, useMemo } from 'react';
 
 export type TMuiThemeProvider = {
-  theme: "light" | "dark";
+  theme: 'light' | 'dark';
 };
 
 export function MuiThemeProvider({
@@ -21,7 +21,7 @@ export function MuiThemeProvider({
   }, [theme]);
 
   return (
-    <AppRouterCacheProvider options={{ key: "css", prepend: true }}>
+    <AppRouterCacheProvider options={{ key: 'css', prepend: true }}>
       <ThemeProvider theme={muiTheme}>
         {children}
         <CssBaseline />

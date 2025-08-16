@@ -1,0 +1,28 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "rimraf lib && tsc",
+    "dev": "tsc -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-auth": "1.2.12",
+    "nodemailer": "^6.10.1",
+    "remult": "^3.0.6",
+    "uuid": "^11.1.0"
+  },
+  "exports": {
+    "./*": {
+      "require": "./lib/*.js",
+      "types": "./lib/*.d.ts",
+      "import": "./lib/*.js"
+    }
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.17"
+  }
+}

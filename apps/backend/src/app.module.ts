@@ -1,48 +1,28 @@
-import { DrizzlePGModule } from '@knaadh/nestjs-drizzle-pg';
 import { Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { createConnectionString } from 'db';
-import * as schema from 'db/schema';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { TrpcModule } from './trpc/trpc.module';
+import { AuthModule } from '@thallesp/nestjs-better-auth';
+import { NestMinioModule } from 'nestjs-minio';
+import { auth } from 'shared/auth';
 
 @Module({
   imports: [
-    TrpcModule,
     ConfigModule.forRoot({ isGlobal: true }),
-    DrizzlePGModule.registerAsync({
-      tag: 'DB_TAG',
+    NestMinioModule.registerAsync({
+      isGlobal: true,
       inject: [ConfigService],
       useFactory(config: ConfigService) {
-        const user = config.getOrThrow<string>('DB_USER');
-        const password = config.getOrThrow<string>('DB_PASSWORD');
-        const host = config.getOrThrow<string>('DB_HOST');
-        const port = config.getOrThrow<string>('DB_PORT');
-        const dbName = config.getOrThrow<string>('DB_NAME');
-
         return {
-          pg: {
-            connection: 'pool',
-            config: {
-              connectionString: createConnectionString(
-                user,
-                password,
-                host,
-                port,
-                dbName,
-              ),
-            },
-          },
-          config: {
-            schema: { ...schema },
-          },
+          endPoint: config.getOrThrow('MINIO_HOST'),
+          port: config.getOrThrow('MINIO_PORT'),
+          useSSL: false,
+          accessKey: config.getOrThrow('MINIO_ACCESS_KEY'),
+          secretKey: config.getOrThrow('MINIO_SECRET_KEY'),
         };
       },
     }),
-    AuthModule,
-    UsersModule,
+    AuthModule.forRoot(auth, { disableBodyParser: true }),
   ],
+  // controllers: [AppController],
 })
 export class AppModule implements OnModuleInit {
   logger = new Logger(AppModule.name);

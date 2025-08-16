@@ -2,19 +2,6 @@
   "name": "npm-workspace",
   "version": "1.0.0",
   "packageManager": "npm@11.3.0",
-  "scripts": {
-    "dev:backend": "npm run dev --workspace=backend",
-    "dev:frontend": "npm run dev --workspace=frontend",
-    "dev": "concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "build:sdk": "npm run build --workspace=sdk",
-    "build:swagger": "npm run build:swagger --workspace=backend",
-    "build:frontend": "npm run build --workspace=frontend",
-    "build:backend": "npm run build --workspace=backend",
-    "build": "concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run build:backend\" \"npm run build:frontend\"",
-    "start:frontend": "npm run start --workspace=frontend",
-    "start:backend": "npm run start --workspace=backend",
-    "start": "concurrently --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm run start:backend\" \"npm run start:frontend\""
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -25,7 +12,14 @@
   ],
   "devDependencies": {
     "@dotenvx/dotenvx": "^1.26.0",
-    "concurrently": "^9.0.1",
-    "turbo": "^2.5.1"
+    "@vercel/ncc": "^0.38.3",
+    "cpy-cli": "^5.0.0",
+    "drizzle-kit": "^0.31.1",
+    "eslint": "^9.27.0",
+    "jiti": "^2.4.2",
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
+    "turbo": "^2.5.4",
+    "typescript": "^5.8.3"
   }
 }

@@ -12,5 +12,5 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "exclude": ["./drizzle.config.ts", "./node_modules", "lib", "build"]
+  "exclude": ["node_modules", "lib"]
 }

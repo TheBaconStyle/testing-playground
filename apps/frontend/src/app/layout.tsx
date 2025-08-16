@@ -1,11 +1,10 @@
-import { auth } from '@/features/auth/api/session';
-import { AuthProvider } from '@/features/auth/ui';
 import { getTheme } from '@/features/theme/api/theme';
 import { MuiThemeProvider } from '@/features/theme/ui/MuiThemeProvider';
 import { NextThemeProvider } from '@/features/theme/ui/NextThemeProvider';
 import { Box } from '@mui/material';
 import type { Metadata } from 'next';
 import { NotificationProvider } from '@/features/notifications/ui/NotificationProvider';
+import { BreadCrumbProvider } from '@/widgets/Breadcrumbs/ui/BreadCrumbProvider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,19 +18,21 @@ export default async function RootLayout({
 }>) {
   const userTheme = await getTheme();
 
-  const authResult = await auth();
-
   return (
-    <html lang="ru" suppressHydrationWarning>
-      <AuthProvider {...authResult}>
-        <Box
-          component="body"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100vh',
-          }}
-        >
+    <html
+      lang="ru"
+      suppressHydrationWarning
+      style={{ scrollBehavior: 'smooth' }}
+    >
+      <Box
+        component="body"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+        }}
+      >
+        <BreadCrumbProvider>
           <NextThemeProvider defaultTheme={userTheme}>
             <MuiThemeProvider theme={userTheme}>
               <NotificationProvider
@@ -43,8 +44,8 @@ export default async function RootLayout({
               </NotificationProvider>
             </MuiThemeProvider>
           </NextThemeProvider>
-        </Box>
-      </AuthProvider>
+        </BreadCrumbProvider>
+      </Box>
     </html>
   );
 }

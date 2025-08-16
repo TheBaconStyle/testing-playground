@@ -2,8 +2,9 @@
 
 import { Breadcrumbs, type BreadcrumbsProps, Typography } from '@mui/material';
 import { usePathname } from 'next/navigation';
-import React, { useEffect, useMemo } from 'react';
-import { type CrumbPath, useBreadcrumbs } from '../model/store';
+import { useEffect, useMemo } from 'react';
+import { type CrumbPath } from '../lib';
+import { useBreadCrumbService } from '../lib';
 import { CrumbLink } from './CrumbLink';
 
 export type TBreadcrumbsContainer = {
@@ -33,9 +34,7 @@ export function BreadCrumbs({
     ];
   }, [basePath, basePathLabel, pathname]);
 
-  const paths = useBreadcrumbs((b) => b.paths);
-
-  const setPaths = useBreadcrumbs((b) => b.setPaths);
+  const { paths, setPaths } = useBreadCrumbService();
 
   useEffect(() => {
     setPaths([...generatedBreadcrumbPaths]);

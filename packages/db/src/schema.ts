@@ -11,85 +11,102 @@ import {
 
 export const dbSchema = pgSchema(process.env.DB_SCHEMA!);
 
-export const users = dbSchema.table("users", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  name: text("name"),
-  email: text("email").unique(),
-  emailVerified: timestamp("email_verified", { mode: "date" }),
+export const user = dbSchema.table("user", {
+  id: uuid("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  emailVerified: boolean("email_verified")
+    .$defaultFn(() => false)
+    .notNull(),
   image: text("image"),
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
+  role: text("role").default("user"),
+  banned: boolean("banned"),
+  banReason: text("ban_reason"),
+  banExpires: timestamp("ban_expires", { withTimezone: true, mode: "date" }),
+  username: text("username"),
+  displayUsername: text("display_username"),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
-  verificationTokens: many(verificationTokens),
-  sessions: many(sessions),
+export const userRelations = relations(user, ({ many }) => ({
+  accounts: many(account),
+  sessions: many(session),
 }));
 
-export const accounts = dbSchema.table(
-  "accounts",
-  {
-    userId: uuid("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    type: varchar("type", { length: 16 }).notNull(),
-    provider: varchar("provider", { length: 256 }).notNull(),
-    providerAccountId: varchar("provider_ccount_id", { length: 256 }).notNull(),
-    refresh_token: varchar("refresh_token", { length: 256 }),
-    access_token: varchar("access_token", { length: 256 }),
-    expires_at: timestamp("expires_at", { mode: "date" }),
-    token_type: varchar("token_type", { length: 256 }),
-    scope: varchar("scope", { length: 256 }),
-    id_token: varchar("id_token", { length: 256 }),
-    session_state: varchar("session_state", { length: 256 }),
-  },
-  (account) => [
-    {
-      compoundKey: primaryKey({
-        columns: [account.provider, account.providerAccountId],
-      }),
-    },
-  ]
-);
-
-export const accountsRelations = relations(accounts, ({ one }) => ({
-  user: one(users, { fields: [accounts.userId], references: [users.id] }),
-}));
-
-export const sessions = dbSchema.table("sessions", {
-  sessionToken: text("session_token").primaryKey(),
+export const account = dbSchema.table("account", {
+  id: uuid("id").primaryKey(),
+  accountId: text("account_id").notNull(),
+  providerId: text("provider_id").notNull(),
   userId: uuid("user_id")
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
+    .references(() => user.id, { onDelete: "cascade", onUpdate: 'cascade' }),
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  idToken: text("id_token"),
+  accessTokenExpiresAt: timestamp("access_token_expires_at"),
+  refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+  scope: text("scope"),
+  password: text("password"),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
 });
 
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
+export const accountRelations = relations(account, ({ one }) => ({
+  user: one(user, { fields: [account.userId], references: [user.id] }),
 }));
 
-export const verificationTokens = dbSchema.table("verification_tokens", {
+export const session = dbSchema.table("session", {
+  id: uuid("id").primaryKey(),
+  expiresAt: timestamp("expires_at").notNull(),
+  token: text("token").notNull().unique(),
+  createdAt: timestamp("created_at", {
+    withTimezone: true,
+    mode: "date",
+  }).notNull(),
+  updatedAt: timestamp("updated_at", {
+    withTimezone: true,
+    mode: "date",
+  }).notNull(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
   userId: uuid("user_id")
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  token: text("token").notNull().primaryKey(),
-  expires: timestamp("expires", { mode: "date" }).notNull(),
+    .references(() => user.id, { onDelete: "cascade" }),
+  impersonatedBy: text("impersonated_by"),
 });
 
-export const verificationTokensRelations = relations(
-  verificationTokens,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [verificationTokens.userId],
-      references: [users.id],
-    }),
-  })
-);
+export const sessionRelations = relations(session, ({ one }) => ({
+  user: one(user, { fields: [session.userId], references: [user.id] }),
+}));
 
-export const habits = dbSchema.table("habits", {
+export const verification = dbSchema.table("verification", {
+  id: uuid("id").primaryKey(),
+  identifier: text("identifier").notNull(),
+  value: text("value").notNull(),
+  expiresAt: timestamp("expires_at", {
+    withTimezone: true,
+    mode: "date",
+  }).notNull(),
+  createdAt: timestamp("created_at", {
+    withTimezone: true,
+    mode: "date",
+  }).defaultNow(),
+  updatedAt: timestamp("updated_at", {
+    withTimezone: true,
+    mode: "date",
+  }).defaultNow(),
+});
+
+export const habit = dbSchema.table("habit", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade", onUpdate: "cascade" }),
   name: varchar("name", { length: 256 }).notNull(),
   codeName: varchar("code_name", { length: 256 }).notNull(),
   description: text("description"),
@@ -109,15 +126,18 @@ export const habits = dbSchema.table("habits", {
     .$onUpdate(() => new Date()),
 });
 
-export const habitsRelations = relations(habits, ({ many }) => ({
-  streaks: many(streaks),
-  categories: many(habitCategories),
-  checkmarks: many(habitCheckmarks),
+export const habitRelations = relations(habit, ({ many }) => ({
+  streaks: many(streak),
+  categories: many(habitCategory),
+  checkmarks: many(habitCheckmark),
+  reminders: many(reminder),
 }));
 
-export const habitCheckmarks = dbSchema.table("habit_checkmarks", {
+export const habitCheckmark = dbSchema.table("habit_checkmark", {
   id: uuid("id").primaryKey().defaultRandom(),
-  habitId: uuid("habit_id").notNull(),
+  habitId: uuid("habit_id")
+    .notNull()
+    .references(() => habit.id, { onDelete: "cascade", onUpdate: "cascade" }),
   date: timestamp("date", { mode: "date", withTimezone: true }).notNull(),
   value: boolean("checked").notNull(),
   note: text("note"),
@@ -128,84 +148,92 @@ export const habitCheckmarks = dbSchema.table("habit_checkmarks", {
 });
 
 export const habitCheckmarksRelations = relations(
-  habitCheckmarks,
+  habitCheckmark,
   ({ one }) => ({
-    habit: one(habits, {
-      fields: [habitCheckmarks.habitId],
-      references: [habits.id],
+    habit: one(habit, {
+      fields: [habitCheckmark.habitId],
+      references: [habit.id],
     }),
   })
 );
 
-export const categories = dbSchema.table("categories", {
+export const category = dbSchema.table("category", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 256 }).notNull(),
   codeName: varchar("code_name", { length: 256 }).notNull(),
 });
 
-export const categoriesRelations = relations(categories, ({ many }) => ({
-  habits: many(habitCategories),
-  parentCategories: many(categoriesToCategories),
-  childCategories: many(categoriesToCategories),
+export const categoryRelations = relations(category, ({ many }) => ({
+  habits: many(habitCategory),
+  parentCategories: many(categoryToCategory),
+  childCategories: many(categoryToCategory),
 }));
 
-export const habitCategories = dbSchema.table(
-  "habit_categories",
+export const habitCategory = dbSchema.table(
+  "habit_category",
   {
     habitId: uuid("habit_id")
-      .references(() => habits.id)
+      .references(() => habit.id, { onDelete: "cascade", onUpdate: "cascade" })
       .notNull(),
     categoryId: uuid("category_id")
-      .references(() => categories.id)
+      .references(() => category.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      })
       .notNull(),
   },
   (t) => [primaryKey({ columns: [t.categoryId, t.habitId] })]
 );
 
-export const habitCategoriesRelations = relations(
-  habitCategories,
-  ({ one }) => ({
-    habit: one(habits, {
-      fields: [habitCategories.habitId],
-      references: [habits.id],
-    }),
-    category: one(categories, {
-      fields: [habitCategories.categoryId],
-      references: [categories.id],
-    }),
-  })
-);
+export const habitCategoryRelations = relations(habitCategory, ({ one }) => ({
+  habit: one(habit, {
+    fields: [habitCategory.habitId],
+    references: [habit.id],
+  }),
+  category: one(category, {
+    fields: [habitCategory.categoryId],
+    references: [category.id],
+  }),
+}));
 
-export const categoriesToCategories = dbSchema.table(
-  "categories_to_categories",
+export const categoryToCategory = dbSchema.table(
+  "category_to_category",
   {
     parentCategoryId: uuid("parent_category_id")
-      .references(() => categories.id)
+      .references(() => category.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      })
       .notNull(),
     childCategoryId: uuid("child_category_id")
-      .references(() => categories.id)
+      .references(() => category.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      })
       .notNull(),
   },
   (t) => [primaryKey({ columns: [t.childCategoryId, t.parentCategoryId] })]
 );
 
-export const categoriesToCategoriesRelations = relations(
-  categoriesToCategories,
+export const categoryToCategoryRelations = relations(
+  categoryToCategory,
   ({ one }) => ({
-    parentCategory: one(categories, {
-      fields: [categoriesToCategories.parentCategoryId],
-      references: [categories.id],
+    parentCategory: one(category, {
+      fields: [categoryToCategory.parentCategoryId],
+      references: [category.id],
     }),
-    childCategory: one(categories, {
-      fields: [categoriesToCategories.childCategoryId],
-      references: [categories.id],
+    childCategory: one(category, {
+      fields: [categoryToCategory.childCategoryId],
+      references: [category.id],
     }),
   })
 );
 
-export const reminders = dbSchema.table("reminders", {
+export const reminder = dbSchema.table("reminder", {
   id: uuid("id").primaryKey().defaultRandom(),
-  habitId: uuid("habit_id").notNull(),
+  habitId: uuid("habit_id")
+    .notNull()
+    .references(() => habit.id, { onDelete: "cascade", onUpdate: "cascade" }),
   message: text("message"),
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
     .notNull()
@@ -216,17 +244,19 @@ export const reminders = dbSchema.table("reminders", {
   }).$onUpdate(() => new Date()),
 });
 
-export const remindersRelations = relations(reminders, ({ one }) => ({
-  habit: one(habits, { fields: [reminders.habitId], references: [habits.id] }),
+export const remindersRelations = relations(reminder, ({ one }) => ({
+  habit: one(habit, { fields: [reminder.habitId], references: [habit.id] }),
 }));
 
-export const streaks = dbSchema.table("streaks", {
+export const streak = dbSchema.table("streak", {
   id: uuid("id").primaryKey().defaultRandom(),
-  habitId: uuid("habit_id").notNull(),
+  habitId: uuid("habit_id")
+    .notNull()
+    .references(() => habit.id, { onDelete: "cascade", onUpdate: "cascade" }),
   start_date: timestamp("start_date", { mode: "date", withTimezone: true }),
   end_date: timestamp("end_date", { mode: "date", withTimezone: true }),
 });
 
-export const streaksRelations = relations(streaks, ({ one }) => ({
-  habit: one(habits, { fields: [streaks.habitId], references: [habits.id] }),
+export const streakRelations = relations(streak, ({ one }) => ({
+  habit: one(habit, { fields: [streak.habitId], references: [habit.id] }),
 }));

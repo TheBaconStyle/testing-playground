@@ -12,8 +12,19 @@ const nextConfig: NextConfig = {
         'www.baconcs.duckdns.org',
         '0bks9mkt-3000.inc1.devtunnels.ms',
         '0bks9mkt-80.inc1.devtunnels.ms',
+        '3rs27bxx-3000.inc1.devtunnels.ms',
       ],
     },
+  },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/api/:path*',
+          destination: 'http://localhost:5000/api/:path*',
+        },
+      ],
+    };
   },
   images: {
     loader: 'custom',

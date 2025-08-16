@@ -1,6 +1,6 @@
 import { getTheme } from '@/features/theme/api';
 import { ThemeSwitch } from '@/widgets/Header/ui/ThemeSwitch';
-import { Box, Grid2 as Grid, Paper } from '@mui/material';
+import { Box, Grid, Paper } from '@mui/material';
 import Image from 'next/image';
 import type { PropsWithChildren } from 'react';
 
@@ -9,8 +9,8 @@ export default async function AuthLayout({ children }: PropsWithChildren) {
   return (
     <Grid container sx={{ flexGrow: 1 }}>
       <Grid
-        size={{ xs: 0, md: 6 }}
-        sx={{ display: { xs: 'none', md: 'block', position: 'relative' } }}
+        size={{ xs: 0, lg: 6 }}
+        sx={{ display: { xs: 'none', lg: 'block', position: 'relative' } }}
         container
         flexDirection="column"
       >
@@ -22,7 +22,7 @@ export default async function AuthLayout({ children }: PropsWithChildren) {
         />
       </Grid>
       <Grid
-        size={{ xs: 12, md: 6 }}
+        size={{ xs: 12, lg: 6 }}
         container
         flexDirection="column"
         component={Paper}

@@ -1,54 +1,49 @@
-import { buildHostUrl, pathTest } from '@/shared/url/lib/url';
 import {
   type MiddlewareConfig,
   type NextRequest,
   NextResponse,
 } from 'next/server';
-import { createClient } from '@/shared/sdk/api/backend';
+import { apiAuthClient } from './features/auth/api/auth';
+import { buildHostUrl, pathTest } from './shared/url/lib';
 
-const publicPaths = ['/', '/auth/*', '/assets/*'];
+const publicPaths = ['/', '/assets/*'];
 
-const authClient = createClient(['auth']);
+const guestPaths = ['/auth/*'];
 
 export async function middleware(request: NextRequest) {
   const requestUrl = buildHostUrl(request);
 
   const isPublicPath = pathTest(publicPaths, requestUrl.href);
 
+  const isGuestPath = pathTest(guestPaths, requestUrl.href);
+
   if (isPublicPath) {
     return NextResponse.next({ request });
   }
 
-  const redirectUrl = requestUrl.clone();
+  const result = await apiAuthClient.getSession({
+    fetchOptions: {
+      headers: request.headers,
+      next: {
+        tags: ['authorization']
+      }
+    }
+  })
 
-  const sessionToken = request.cookies.get('example-session')?.value;
+  const isAuthenticated = !!result.data?.user;
 
-  const callbackParam = redirectUrl.searchParams.get('callbackUrl');
+  if (isGuestPath && isAuthenticated) {
+    const redirectUrl = new URL('/', requestUrl);
 
-  redirectUrl.search = '';
-
-  redirectUrl.pathname = 'auth/signin';
-
-  const callbackUrl = redirectUrl.clone();
-
-  callbackUrl.pathname = requestUrl.pathname;
-
-  if (callbackParam) {
-    callbackUrl.href = callbackParam;
+    return NextResponse.redirect(redirectUrl, request);
   }
 
-  redirectUrl.searchParams.set('callbackUrl', callbackUrl.href);
+  if (!isPublicPath && !isGuestPath && !isAuthenticated) {
+    const redirectUrl = new URL('/auth/signin', requestUrl);
 
-  if (!sessionToken) {
-    return NextResponse.redirect(redirectUrl, { headers: request.headers });
-  }
+    redirectUrl.searchParams.set('callbackURL', requestUrl.pathname);
 
-  const { isAuthorized } = await authClient.auth.authorize.query({
-    token: sessionToken,
-  });
-
-  if (!isAuthorized) {
-    return NextResponse.redirect(redirectUrl, { headers: request.headers });
+    return NextResponse.redirect(redirectUrl, request);
   }
 
   return NextResponse.next({ request });
