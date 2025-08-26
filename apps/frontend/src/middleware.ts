@@ -1,7 +1,7 @@
 import {
-  type MiddlewareConfig,
+  MiddlewareConfig,
   type NextRequest,
-  NextResponse,
+  NextResponse
 } from 'next/server';
 import { apiAuthClient } from './features/auth/api/auth';
 import { buildHostUrl, pathTest } from './shared/url/lib';

@@ -1,4 +1,9 @@
 import { Header } from '@/widgets/Header/ui/Header';
+import AlarmIcon from '@mui/icons-material/Alarm';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import PsychologyIcon from '@mui/icons-material/Psychology';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import {
   Box,
   Button,
@@ -10,12 +15,6 @@ import {
 } from '@mui/material';
 import MuiLink from '@mui/material/Link';
 import Link from 'next/link';
-import EditNoteIcon from '@mui/icons-material/EditNote';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
-import PsychologyIcon from '@mui/icons-material/Psychology';
-import AlarmIcon from '@mui/icons-material/Alarm';
-import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 
 const headerLinks = [
   { href: '#about', label: 'О нас' },
@@ -200,24 +199,6 @@ export default function Home() {
                 </Typography>
                 <Typography>
                   Настраиваемые уведомления в нужное время, чтобы не забывать
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card sx={{ width: '400px' }}>
-              <CardMedia sx={{ display: 'flex', justifyContent: 'center' }}>
-                <SportsEsportsIcon sx={{ width: 75, height: 75 }} />
-              </CardMedia>
-              <CardContent>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="div"
-                  textAlign="center"
-                >
-                  Геймификация
-                </Typography>
-                <Typography>
-                  Зарабатывай баллы, удерживай серии и прокачивай мотивацию
                 </Typography>
               </CardContent>
             </Card>

@@ -1,4 +1,4 @@
-import { getTheme } from '@/features/theme/api';
+import { getTheme } from '../../features/theme/api';
 import { ThemeSwitch } from '@/widgets/Header/ui/ThemeSwitch';
 import { Box, Grid, Paper } from '@mui/material';
 import Image from 'next/image';
@@ -18,7 +18,8 @@ export default async function AuthLayout({ children }: PropsWithChildren) {
           src={'https://www.baconcs.duckdns.org/assets/cheggy.png'}
           alt="qwe"
           fill
-          quality={100}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority={true}
         />
       </Grid>
       <Grid

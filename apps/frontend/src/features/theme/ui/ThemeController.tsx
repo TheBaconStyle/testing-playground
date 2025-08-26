@@ -1,7 +1,7 @@
-"use client";
-import { useTheme } from "next-themes";
-import { useEffect } from "react";
-import { setTheme } from "@/features/theme/api/theme";
+'use client';
+import { useTheme } from 'next-themes';
+import { useEffect } from 'react';
+import { setTheme } from '../api/theme';
 
 export type TThemeController = {
   currentTheme?: string;
@@ -14,7 +14,7 @@ export function ThemeController({ currentTheme }: TThemeController) {
     const setResolvedTheme = async () => {
       if (
         resolvedTheme &&
-        resolvedTheme !== "system" &&
+        resolvedTheme !== 'system' &&
         resolvedTheme !== currentTheme
       )
         setTheme(resolvedTheme);

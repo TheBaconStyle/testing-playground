@@ -1,6 +1,6 @@
 'use client';
 
-import { reactAuthCLient } from '@/features/auth/api/react';
+import { reactAuthCLient } from '../../../../src/features/auth/api/react';
 import { Button } from '@mui/material';
 import Link from 'next/link';
 

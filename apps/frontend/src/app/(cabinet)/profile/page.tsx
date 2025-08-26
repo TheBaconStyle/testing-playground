@@ -1,5 +1,5 @@
-import { apiAuthClient } from '@/features/auth/api/auth';
-import { EditProfille } from '@/features/profile/ui/EditProfile';
+import { apiAuthClient } from '../../../features/auth/api/auth';
+import { EditProfille } from '../../../features/profile/ui/EditProfile';
 import CrumbLabel from '@/widgets/Breadcrumbs/ui/СrumbLabel';
 import { Box, Typography } from '@mui/material';
 import { headers } from 'next/headers';

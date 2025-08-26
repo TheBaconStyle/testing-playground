@@ -8,13 +8,18 @@ import Link from 'next/link';
 import { PropsWithChildren } from 'react';
 import { ThemeSwitch } from './ThemeSwitch';
 import { apiAuthClient } from '@/features/auth/api/auth';
+import { headers } from 'next/headers';
 
 type THeader = PropsWithChildren<AppBarProps>;
 
 export async function Header({ children, ...appBarProps }: THeader) {
   const currentTheme = await getTheme();
 
-  const authResult = await apiAuthClient.getSession();
+  const headersStore = await headers();
+
+  const authResult = await apiAuthClient.getSession({
+    fetchOptions: { headers: headersStore },
+  });
 
   return (
     <AppBar
