@@ -1,0 +1,22 @@
+meta {
+  name: signIn
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:5000/api/auth/
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "providerId": "yandex",
+    "callbackUrl": "https://www.baconcs.duckdns.org/dashboard"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
