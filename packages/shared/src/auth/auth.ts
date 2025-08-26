@@ -10,11 +10,6 @@ import { createTransport } from "nodemailer";
 import { genericOAuth } from "better-auth/plugins";
 
 export const auth = betterAuth({
-  // trustedOrigins: [
-  //   "https://www.baconcs.duckdns.org",
-  //   "https://3rs27bxx-3000.inc1.devtunnels.ms",
-  //   "http://localhost:3000",
-  // ],
   database: drizzleAdapter(db, { provider: "pg", schema }),
   plugins: [
     adminPlugin({
@@ -25,7 +20,7 @@ export const auth = betterAuth({
       },
     }),
     username(),
-    openAPI(),
+    openAPI({disableDefaultReference:true}),
     genericOAuth({
       config: [
         {

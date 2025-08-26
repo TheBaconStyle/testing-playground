@@ -1,3 +1,4 @@
+import { Statements } from 'better-auth/plugins/access';
 import { defaultStatements } from 'better-auth/plugins/admin/access';
 
 export const statements = {
@@ -6,4 +7,4 @@ export const statements = {
   streak: ['create', 'update', 'delete', 'view', 'share'],
   category: ['create', 'update', 'delete', 'view'],
   reminder: ['create', 'update', 'delete', 'view'],
-} as const;
+} satisfies Statements;
