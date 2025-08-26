@@ -25,9 +25,7 @@
     "build:migration": "ncc build ./src/migration.ts -o build -m",
     "dev": "tsc -w"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "description": "",
   "dependencies": {
     "drizzle-orm": "^0.44.0",

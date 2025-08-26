@@ -7,6 +7,7 @@ import {
   timestamp,
   uuid,
   varchar,
+  jsonb
 } from "drizzle-orm/pg-core";
 
 export const dbSchema = pgSchema(process.env.DB_SCHEMA!);
@@ -235,6 +236,12 @@ export const reminder = dbSchema.table("reminder", {
     .notNull()
     .references(() => habit.id, { onDelete: "cascade", onUpdate: "cascade" }),
   message: text("message"),
+  start: timestamp("start", {
+    mode: "date",
+    withTimezone: true,
+  }).notNull(),
+  rrule: text("rrule"),
+  exceptions: jsonb("exceptions"),
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
     .notNull()
     .defaultNow(),
