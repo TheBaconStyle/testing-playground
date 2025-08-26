@@ -1,0 +1,9 @@
+packages:
+  - packages/*
+  - apps/*
+
+ignoredBuiltDependencies:
+  - '@kylegillen/nestjs-fastify-better-auth'
+
+onlyBuiltDependencies:
+  - '@nestjs/core'

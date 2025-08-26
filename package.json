@@ -1,25 +1,26 @@
 {
-  "name": "npm-workspace",
+  "devDependencies": {
+    "@dotenvx/dotenvx": "^1.49.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.34.0",
+    "@vercel/ncc": "^0.38.3",
+    "cpy-cli": "^6.0.0",
+    "cross-env": "^10.0.0",
+    "drizzle-kit": "^0.31.4",
+    "eslint": "^9.34.0",
+    "jiti": "^2.5.1",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
+    "turbo": "^2.5.6",
+    "typescript": "^5.9.2"
+  },
+  "license": "UNLICENSED",
+  "name": "testing-playground",
+  "packageManager": "pnpm@10.15.0",
   "version": "1.0.0",
-  "packageManager": "npm@11.3.0",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
-  "devDependencies": {
-    "@dotenvx/dotenvx": "^1.26.0",
-    "@vercel/ncc": "^0.38.3",
-    "cpy-cli": "^5.0.0",
-    "drizzle-kit": "^0.31.1",
-    "eslint": "^9.27.0",
-    "jiti": "^2.4.2",
-    "prettier": "^3.5.3",
-    "rimraf": "^6.0.1",
-    "turbo": "^2.5.4",
-    "typescript": "^5.8.3"
-  }
+  "private": true
 }

@@ -6,5 +6,6 @@ www
 data
 dist
 .turbo
-lib
-
+packages/**/lib
+.next
+.next/**
