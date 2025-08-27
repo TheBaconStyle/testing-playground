@@ -1,14 +1,4 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build && cpy .next/static .next/standalone/apps/frontend && cpy public .next/standalone/apps/frontend",
-    "start": "dotenvx run -- .next/standalone/apps/frontend/server.js",
-    "lint": "eslint --fix",
-    "dev:email": "email dev --dir src/views/email/ui --port 3001"
-  },
   "dependencies": {
     "@bitpatty/imgproxy-url-builder": "2.0.0",
     "@edge-runtime/ponyfill": "4.0.0",
@@ -38,6 +28,7 @@
     "zod": "3.25.76"
   },
   "devDependencies": {
+    "@react-email/preview-server": "4.2.8",
     "@types/node": "^24",
     "@types/nodemailer": "^7.0.1",
     "@types/react": "^19.1.11",
@@ -45,5 +36,15 @@
     "eslint-config-next": "^15.5.0",
     "ignore-loader": "^0.1.2",
     "react-email": "4.2.8"
-  }
+  },
+  "name": "frontend",
+  "private": true,
+  "scripts": {
+    "build": "next build && cpy .next/static .next/standalone/apps/frontend && cpy public .next/standalone/apps/frontend",
+    "dev": "next dev",
+    "dev:email": "email dev --dir src/views/email/ui --port 3001",
+    "lint": "eslint --fix",
+    "start": "dotenvx run -- .next/standalone/apps/frontend/server.js"
+  },
+  "version": "0.1.0"
 }

@@ -1,9 +1,15 @@
 {
   "dependencies": {
+    "@react-email/components": "0.5.1",
+    "@react-email/preview-server": "4.2.8",
+    "@react-email/render": "1.2.1",
     "@t3-oss/env-core": "^0.13.8",
     "better-auth": "1.3.7",
     "db": "workspace:*",
     "nodemailer": "^6.10.1",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "react-email": "4.2.8",
     "remult": "^3.0.6",
     "uuid": "^11.1.0",
     "zod": "3.25.76"
@@ -13,13 +19,14 @@
   },
   "exports": {
     "./*": {
-      "require": "./lib/*.js",
       "import": "./lib/*.js",
+      "require": "./lib/*.js",
       "types": "./lib/*.d.ts"
     }
   },
   "license": "UNLICENSED",
   "name": "shared",
+  "private": true,
   "scripts": {
     "build": "rimraf lib && tsc",
     "dev": "tsc -w"

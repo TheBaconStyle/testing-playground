@@ -6,21 +6,23 @@ import {
   Button,
   Hr,
   render,
-} from "@react-email/components";
+  Img,
+} from '@react-email/components';
 
 export type TSignInEmail = {
   url: string;
 };
 
-export default function SignInEmail({ url = "#" }: TSignInEmail) {
+export default function SignInEmail({ url = '#' }: TSignInEmail) {
   return (
-    <Html lang="en" style={{ fontFamily: "sans-serif" }}>
+    <Html lang="en" style={{ fontFamily: 'sans-serif' }}>
       <Container
         style={{
-          padding: "56px",
-          border: "1px solid black",
+          padding: '56px',
+          border: '1px solid black',
         }}
       >
+        <Img src="https://s3.baconcs.duckdns.org/images/cheggy.png" />
         <Heading as="h2">Sign in to the app</Heading>
         <Hr />
         <Text>To sign in press the button below</Text>
@@ -28,11 +30,11 @@ export default function SignInEmail({ url = "#" }: TSignInEmail) {
         <Button
           href={url}
           style={{
-            padding: "8px",
-            border: "2px solid blue",
-            backgroundColor: "blue",
-            color: "white",
-            borderRadius: "4px",
+            padding: '8px',
+            border: '2px solid blue',
+            backgroundColor: 'blue',
+            color: 'white',
+            borderRadius: '4px',
           }}
         >
           Sign in
