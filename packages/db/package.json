@@ -27,10 +27,10 @@
   "license": "UNLICENSED",
   "description": "",
   "dependencies": {
-    "drizzle-orm": "^0.44.0",
-    "pg": "^8.15.2"
+    "drizzle-orm": "0.44.0",
+    "pg": "8.15.2"
   },
   "devDependencies": {
-    "@types/pg": "^8.15.2"
+    "@types/pg": "8.15.2"
   }
 }

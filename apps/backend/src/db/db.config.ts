@@ -1,18 +1,23 @@
+import { createConnectionString, schema } from 'db';
+import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import * as schema from 'db/schema';
-import { createConnectionString } from 'db';
-
-const connectionString = createConnectionString(
-  process.env.DB_USER!,
-  process.env.DB_PASSWORD!,
-  process.env.DB_HOST!,
-  process.env.DB_PORT!,
-  process.env.DB_NAME!
-);
+import { env } from 'shared/env/backend/env';
 
 export const DB_TAG = 'DB_TAG';
 
-const connectionPool = new Pool({ connectionString });
+export const db = drizzle(
+  new Pool({
+    connectionString: createConnectionString(
+      env.DB_USER,
+      env.DB_PASSWORD,
+      env.DB_HOST,
+      env.DB_PORT.toString(),
+      env.DB_NAME,
+    ),
+  }),
+  { schema },
+);
 
-export const db = drizzle(connectionPool, { schema });
+export type DB = NodePgDatabase<typeof schema>;
+
+

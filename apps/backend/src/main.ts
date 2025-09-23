@@ -5,8 +5,8 @@ import {
 } from '@nestjs/platform-fastify';
 import { apiReference } from '@scalar/nestjs-api-reference';
 import { AuthService } from '@kylegillen/nestjs-fastify-better-auth';
-import { auth } from 'shared/auth/auth';
 import { AppModule } from './app.module';
+import { TAuthService } from './auth/auth.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -17,16 +17,21 @@ async function bootstrap() {
     },
   );
 
-  const authService = app.get<AuthService<typeof auth>>(AuthService)
+  if (process.env.NODE_ENV !== 'production') {
+    const authService = app.get<AuthService<TAuthService>>(AuthService);
 
-  const openApiReference = await authService.api.generateOpenAPISchema()
+    const openApiReference = await authService.api.generateOpenAPISchema();
 
-  app.use('/api/auth/reference', apiReference({withFastify: true, content: openApiReference}))
+    app.use(
+      '/api/auth/reference',
+      apiReference({ withFastify: true, content: openApiReference }),
+    );
+  }
 
   app.enableCors({
     origin: [
-      'http://localhost:3000',
-      'https://www.baconcs.duckdns.org',
+      'localhost:3000',
+      'www.baconcs.duckdns.org',
       '3rs27bxx-3000.inc1.devtunnels.ms',
       'client.scalar.com',
     ],

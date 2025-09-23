@@ -10,15 +10,16 @@ import { genericOAuth } from 'better-auth/plugins';
 import { createConnectionString, schema } from 'db';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { NestMinioModule } from 'nestjs-minio';
-import { createTransport } from 'nodemailer';
+import path from 'node:path';
 import { AppController } from './app.controller';
 import {
-  authOptions,
-  authPlugins,
-  yandexOAuthOptionsBase,
+  defaultAuthOptions,
+  defaultAuthPlugins,
+  yandexOAuthDefaultOptions,
 } from './auth/auth.config';
 import { DB_TAG } from './db/db.config';
 import { renderToHTML } from './email/templates/signin';
+import { HabitsModule } from './habits/habits.module';
 
 @Module({
   imports: [
@@ -67,20 +68,18 @@ import { renderToHTML } from './email/templates/signin';
     MailerModule.forRootAsync({
       inject: [ConfigService],
       useFactory(config: ConfigService) {
-        const transport = createTransport({
-          host: config.getOrThrow('SMTP_HOST'),
-          port: config.getOrThrow('SMTP_PORT'),
-          secure: config.getOrThrow('SMTP_SECURE'),
-          auth: {
-            user: config.getOrThrow('SMTP_USER'),
-            pass: config.getOrThrow('SMTP_PASSWORD'),
-          },
-        });
-
         return {
-          transport,
+          transport: {
+            host: config.getOrThrow('SMTP_HOST'),
+            port: config.getOrThrow('SMTP_PORT'),
+            secure: JSON.parse(config.getOrThrow('SMTP_SECURE')),
+            auth: {
+              user: config.getOrThrow('SMTP_USER'),
+              pass: config.getOrThrow('SMTP_PASSWORD'),
+            },
+          },
           template: {
-            dir: __dirname + '/email/templates',
+            dir: path.resolve(__dirname, 'email', 'templates'),
             adapter: new ReactAdapter(),
           },
           defaults: {
@@ -102,8 +101,8 @@ import { renderToHTML } from './email/templates/signin';
         const YANDEX_CLIENT_ID = config.getOrThrow('AUTH_YANDEX_ID');
         const YANDEX_CLIENT_SECRET = config.getOrThrow('AUTH_YANDEX_SECRET');
 
-        return betterAuth({
-          ...authOptions,
+        const auth = betterAuth({
+          ...defaultAuthOptions,
           database: drizzleAdapter(db, { schema, provider: 'pg' }),
           socialProviders: {
             vk: {
@@ -112,11 +111,11 @@ import { renderToHTML } from './email/templates/signin';
             },
           },
           plugins: [
-            ...authPlugins,
+            ...defaultAuthPlugins,
             genericOAuth({
               config: [
                 {
-                  ...yandexOAuthOptionsBase,
+                  ...yandexOAuthDefaultOptions,
                   clientId: YANDEX_CLIENT_ID,
                   clientSecret: YANDEX_CLIENT_SECRET,
                 },
@@ -136,8 +135,11 @@ import { renderToHTML } from './email/templates/signin';
             },
           },
         }) as any;
+
+        return auth;
       },
     }),
+    HabitsModule,
   ],
   controllers: [AppController],
 })

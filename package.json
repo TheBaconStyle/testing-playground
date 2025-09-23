@@ -16,7 +16,7 @@
   },
   "license": "UNLICENSED",
   "name": "testing-playground",
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.17.1",
   "version": "1.0.0",
   "workspaces": [
     "packages/*",

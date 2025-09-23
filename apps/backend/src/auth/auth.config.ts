@@ -1,15 +1,20 @@
-import { BetterAuthOptions, BetterAuthPlugin, User } from 'better-auth';
+import { betterAuth, User } from 'better-auth';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import {
   admin as adminPlugin,
+  genericOAuth,
   GenericOAuthConfig,
   openAPI,
-  username
+  username,
 } from 'better-auth/plugins';
 import { cookiePrefix } from 'shared/auth/config';
 import { ac, admin, user } from 'shared/auth/roles';
+import { db } from '../db/db.config';
 import { v7 } from 'uuid';
+import { schema } from 'db';
+import { AuthService } from '@kylegillen/nestjs-fastify-better-auth';
 
-export const yandexOAuthOptionsBase: Pick<
+export const yandexOAuthDefaultOptions: Pick<
   GenericOAuthConfig,
   'providerId' | 'authorizationUrl' | 'tokenUrl' | 'getUserInfo'
 > = {
@@ -42,7 +47,7 @@ export const yandexOAuthOptionsBase: Pick<
   },
 };
 
-export const authPlugins: BetterAuthPlugin[] = [
+export const defaultAuthPlugins = [
   adminPlugin({
     ac,
     roles: {
@@ -54,11 +59,23 @@ export const authPlugins: BetterAuthPlugin[] = [
   openAPI({ disableDefaultReference: true }),
 ];
 
-export const authOptions: BetterAuthOptions = {
+export const defaultAuthOptions = {
+  database: drizzleAdapter(db, { schema, provider: 'pg' }),
+  plugins: [
+    ...defaultAuthPlugins,
+    genericOAuth({ config: [] }),
+  ],
+  emailVerification: {
+    autoSignInAfterVerification: true,
+    sendOnSignUp: true,
+  },
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
     requireEmailVerification: true,
+  },
+  telemetry: {
+    enabled: false,
   },
   advanced: {
     useSecureCookies: true,
@@ -77,3 +94,7 @@ export const authOptions: BetterAuthOptions = {
     },
   },
 };
+
+type TAuth = ReturnType<typeof betterAuth<typeof defaultAuthOptions>>
+
+export type TAuthService = AuthService<TAuth>;
