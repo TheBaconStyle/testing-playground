@@ -2,7 +2,7 @@
 
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
-import { themeFont } from '../lib/theme';
+import { themeFont } from '../lib/font';
 import { type PropsWithChildren, useMemo } from 'react';
 
 export type TMuiThemeProvider = {

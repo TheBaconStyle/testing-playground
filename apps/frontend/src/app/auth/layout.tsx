@@ -2,16 +2,16 @@ import { getTheme } from '../../features/theme/api';
 import { ThemeSwitch } from '@/widgets/Header/ui/ThemeSwitch';
 import { Box, Grid, Paper } from '@mui/material';
 import Image from 'next/image';
-import type { PropsWithChildren } from 'react';
 
-export default async function AuthLayout({ children }: PropsWithChildren) {
+export default async function AuthLayout({
+  children,
+}: React.PropsWithChildren) {
   const theme = await getTheme();
   return (
     <Grid container sx={{ flexGrow: 1 }}>
       <Grid
         size={{ xs: 0, lg: 6 }}
         sx={{ display: { xs: 'none', lg: 'block', position: 'relative' } }}
-        container
         flexDirection="column"
       >
         <Image
@@ -24,10 +24,10 @@ export default async function AuthLayout({ children }: PropsWithChildren) {
       </Grid>
       <Grid
         size={{ xs: 12, lg: 6 }}
-        container
         flexDirection="column"
         component={Paper}
-        sx={{ position: 'relative' }}
+        position="relative"
+        display="flex"
       >
         <Box
           sx={{
@@ -38,7 +38,7 @@ export default async function AuthLayout({ children }: PropsWithChildren) {
             p: 2,
           }}
         >
-          <ThemeSwitch currentTheme={theme} />{' '}
+          <ThemeSwitch currentTheme={theme} />
         </Box>
         {children}
       </Grid>

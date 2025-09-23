@@ -1,5 +1,5 @@
 'use client';
-import { Check, Close, ExpandMore } from '@mui/icons-material';
+import { Close, ExpandMore } from '@mui/icons-material';
 import {
   Alert,
   AlertColor,
@@ -12,16 +12,15 @@ import {
 } from '@mui/material';
 import { motion } from 'motion/react';
 import { ReactNode, Ref, useState } from 'react';
+import { ExternalToast, toast } from 'sonner';
 
-export type TNotification = {
+export type TNotification = ExternalToast & {
   color?: AlertColor;
-  icon?: AlertProps['icon'];
+  toastIcon?: AlertProps['icon'];
   title?: string;
   message?: string;
   content?: ReactNode;
   ref?: Ref<HTMLDivElement>;
-  id?: string | number;
-  onClose?: () => void;
   onCloseAction?: (id: TNotification['id']) => void;
 };
 
@@ -31,7 +30,7 @@ export function Notification({
   content,
   title,
   message,
-  icon = <Check fontSize="inherit" />,
+  toastIcon,
   color = 'success',
   ref,
   onCloseAction,
@@ -47,10 +46,10 @@ export function Notification({
           borderBottomLeftRadius: isOpen ? 0 : undefined,
           borderBottomRightRadius: isOpen ? 0 : undefined,
         }}
-        icon={icon}
+        icon={toastIcon}
         severity={color}
         variant="filled"
-        sx={{ alignItems: 'center' }}
+        sx={{ alignItems: 'center', color: 'inherit' }}
         action={
           <Box>
             {content && (
@@ -64,7 +63,13 @@ export function Notification({
               </IconButton>
             )}
             {onCloseAction && (
-              <IconButton color="inherit" onClick={() => onCloseAction(id)}>
+              <IconButton
+                color="inherit"
+                onClick={() => {
+                  onCloseAction?.(id);
+                  toast.dismiss(id);
+                }}
+              >
                 <Close fontSize="small" />
               </IconButton>
             )}

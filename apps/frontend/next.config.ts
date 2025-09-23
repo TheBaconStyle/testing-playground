@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   cleanDistDir: true,
   output: 'standalone',
+  typedRoutes: true,
   experimental: {
     viewTransition: true,
     serverActions: {
@@ -20,8 +21,8 @@ const nextConfig: NextConfig = {
     return {
       beforeFiles: [
         {
-          source: '/api/auth/:path*',
-          destination: 'http://localhost:5000/api/auth/:path*',
+          source: '/api/:path*',
+          destination: 'http://localhost:5000/api/:path*',
         },
       ],
     };

@@ -6,11 +6,14 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { MouseEvent, ReactNode, useCallback, useState } from 'react';
+import { Route } from 'next';
+import { usePathname } from 'next/navigation';
+import { MouseEvent, ReactNode, useCallback, useEffect, useState } from 'react';
 
 export type TNestedListItem = {
   text: string;
   icon: ReactNode;
+  route?: Route;
 } & ListItemButtonProps;
 
 export function NestedListItemButton({
@@ -18,9 +21,18 @@ export function NestedListItemButton({
   text,
   icon,
   onClick,
+  route,
   ...props
 }: TNestedListItem) {
-  const [isOpen, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  const [isOpen, setOpen] = useState(
+    () => !!route && pathname.startsWith(route),
+  );
+
+  useEffect(() => {
+    !!route && setOpen(pathname.startsWith(route));
+  }, [pathname]);
 
   const handleClick = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {

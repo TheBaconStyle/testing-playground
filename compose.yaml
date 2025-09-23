@@ -1,16 +1,4 @@
 services:
-  # nginxproxymanager:
-  #   image: "jc21/nginx-proxy-manager:latest"
-  #   restart: unless-stopped
-  #   ports:
-  #     - "80:80"
-  #     - "81:81"
-  #     - "443:443"
-  #   volumes:
-  #     - ./data:/data
-  #     - ./letsencrypt:/etc/letsencrypt
-  #   networks:
-  #     - devnet
   mail:
     restart: on-failure
     image: haravich/fake-smtp-server
@@ -103,7 +91,7 @@ services:
     restart: always
 
   minio:
-    image: minio/minio
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
     volumes:
       - ./data:/data
     environment:
@@ -181,13 +169,6 @@ services:
 
       ### Security
       ### See: https://docs.imgproxy.net/configuration/options#security
-      # IMGPROXY_SALT: ""
-      # IMGPROXY_KEY: ""
-      # IMGPROXY_SECRET: ""
-      # IMGPROXY_SOURCE_URL_ENCRYPTION_KEY: ""
-      # IMGPROXY_SIGNATURE_SIZE: 32
-      # IMGPROXY_ALLOW_ORIGIN: ""
-      # IMGPROXY_ALLOWED_SOURCES: ""
       IMGPROXY_ALLOW_LINK_LOCAL_SOURCE_ADDRESSES: false
       IMGPROXY_ALLOW_LOOPBACK_SOURCE_ADDRESSES: false
       IMGPROXY_ALLOW_PRIVATE_SOURCE_ADDRESSES: true
@@ -229,21 +210,6 @@ services:
       ### See: https://docs.imgproxy.net/configuration/options#client-hints-support
       IMGPROXY_ENABLE_CLIENT_HINTS: true
 
-      ### Watermark
-      ### See: https://docs.imgproxy.net/configuration/options#watermark
-      # IMGPROXY_WATERMARK_OPACITY: 1
-      # IMGPROXY_WATERMARK_PATH: "/home/watermark.jpg"
-      # IMGPROXY_WATERMARK_DATA: ""
-      # IMGPROXY_WATERMARK_URL: ""
-
-      ### Fallback image
-      ### See: https://docs.imgproxy.net/configuration/options#fallback-image
-      # IMGPROXY_FALLBACK_IMAGE_TTL: 0
-      # IMGPROXY_FALLBACK_IMAGE_HTTP_CODE: 404
-      # IMGPROXY_FALLBACK_IMAGE_PATH: "/home/noimage.jpg"
-      # IMGPROXY_FALLBACK_IMAGE_DATA: ""
-      # IMGPROXY_FALLBACK_IMAGE_URL: ""
-
       ### Presets
       ### See: https://docs.imgproxy.net/configuration/options#presets
       IMGPROXY_PRESETS: "default=resizing_type:fit/gravity:sm,logo=watermark:0.8:soea:20:20:0.15,repeated_logo=watermark:0.25:re:0:0:0.2"
@@ -268,75 +234,6 @@ services:
       # IMGPROXY_S3_REGION: ""
       # IMGPROXY_S3_ENDPOINT: ""
       # IMGPROXY_S3_MULTI_REGION: false
-
-      # ### Google Cloud Storage
-      # ### See: https://docs.imgproxy.net/configuration/options#google-cloud-storage
-      # IMGPROXY_USE_GCS: false
-      # IMGPROXY_GCS_KEY: ""
-
-      # ### Azure Blob Storage
-      # ### See: https://docs.imgproxy.net/configuration/options#azure-blob-storage
-      # IMGPROXY_USE_ABS: false
-      # IMGPROXY_ABS_NAME: ""
-      # IMGPROXY_ABS_KEY: ""
-      # IMGPROXY_ABS_ENDPOINT: ""
-
-      # ### OpenStack Object Storage
-      # ### See: https://docs.imgproxy.net/configuration/options#serving-files-from-openstack-object-storage-swift
-      # IMGPROXY_USE_SWIFT: false
-      # IMGPROXY_SWIFT_USERNAME: ""
-      # IMGPROXY_SWIFT_API_KEY: ""
-      # IMGPROXY_SWIFT_AUTH_URL: ""
-      # IMGPROXY_SWIFT_AUTH_VERSION: 0
-      # IMGPROXY_SWIFT_TENANT: ""
-      # IMGPROXY_SWIFT_DOMAIN: ""
-      # IMGRPOXY_SWIFT_CONNECT_TIMEOUT_SECONDS: 10
-      # IMGRPOXY_SWIFT_TIMEOUT_SECONDS: 60
-
-      # ### New Relic
-      # ### See: https://docs.imgproxy.net/configuration/options#new-relic
-      # IMGPROXY_NEW_RELIC_APP_NAME: ""
-      # IMGPROXY_NEW_RELIC_KEY: ""
-
-      # ### Prometheus
-      # ### See: https://docs.imgproxy.net/configuration/options#prometheus
-      # IMGPROXY_PROMETHEUS_BIND: ""
-      # IMGPROXY_PROMETHEUS_NAMESPACE: ""
-
-      # ### OpenTelemetry
-      # ### See: https://docs.imgproxy.net/configuration/options#opentelemetry
-      # IMGPROXY_OPEN_TELEMETRY_ENABLE_METRICS: false
-      # IMGPROXY_OPEN_TELEMETRY_SERVER_CERT: ""
-      # IMGPROXY_OPEN_TELEMETRY_CLIENT_CERT: ""
-      # IMGPROXY_OPEN_TELEMETRY_CLIENT_KEY: ""
-      # IMGPROXY_OPEN_TELEMETRY_TRACE_ID_GENERATOR: "xray"
-
-      # ### Amazon CloudWatch metrics
-      # ### See: https://docs.imgproxy.net/configuration/options#amazon-cloudwatch-metrics
-      # IMGPROXY_CLOUD_WATCH_SERVICE_NAME: ""
-      # IMGPROXY_CLOUD_WATCH_NAMESPACE: "imgproxy"
-      # IMGPROXY_CLOUD_WATCH_REGION: ""
-
-      # ### Bugsnag
-      # ### See: https://docs.imgproxy.net/configuration/options#bugsnag
-      # IMGPROXY_BUGSNAG_KEY: ""
-      # IMGPROXY_BUGSNAG_STAGE: "production"
-
-      # ### Honeybadger
-      # ### See: https://docs.imgproxy.net/configuration/options#honeybadger
-      # IMGPROXY_HONEYBADGER_KEY: ""
-      # IMGPROXY_HONEYBADGER_ENV: "production"
-
-      # ### Sentry
-      # ### See: https://docs.imgproxy.net/configuration/options#sentry
-      # IMGPROXY_SENTRY_DSN: ""
-      # IMGPROXY_SENTRY_ENVIRONMENT: "production"
-
-      # ### Airbrake
-      # ### See: https://docs.imgproxy.net/configuration/options#airbrake
-      # IMGPROXY_AIRBRAKE_PROJECT_ID: 0
-      # IMGPROXY_AIRBRAKE_PROJECT_KEY: ""
-      # IMGPROXY_AIRBRAKE_ENVIRONMENT: "production"
 
 networks:
   devnet:

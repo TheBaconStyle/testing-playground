@@ -1,18 +1,18 @@
+import { apiAuthClient } from '@/features/auth/api/auth';
 import { getTheme } from '@/features/theme/api';
 import { Today as TodayIcon } from '@mui/icons-material';
-import AppBar, { AppBarProps } from '@mui/material/AppBar';
+import AppBar from '@mui/material/AppBar';
 import MuiLink from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { PropsWithChildren } from 'react';
 import { ThemeSwitch } from './ThemeSwitch';
-import { apiAuthClient } from '@/features/auth/api/auth';
-import { headers } from 'next/headers';
 
-type THeader = PropsWithChildren<AppBarProps>;
+type THeader = PropsWithChildren;
 
-export async function Header({ children, ...appBarProps }: THeader) {
+export async function Header({ children }: THeader) {
   const currentTheme = await getTheme();
 
   const headersStore = await headers();
@@ -23,10 +23,8 @@ export async function Header({ children, ...appBarProps }: THeader) {
 
   return (
     <AppBar
-      {...appBarProps}
       component="header"
       sx={{
-        ...appBarProps.sx,
         userSelect: 'none',
         position: 'sticky',
       }}

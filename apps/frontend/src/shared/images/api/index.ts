@@ -1,5 +1,7 @@
+'use client'
 import type { ImageLoader } from 'next/image';
 import proxyUrlBuilder, { ResizeType } from '@bitpatty/imgproxy-url-builder';
+import { env } from '@/shared/env';
 
 const imgproxyLoader: ImageLoader = ({ src, width, quality = 75 }) =>
   proxyUrlBuilder()
@@ -7,7 +9,7 @@ const imgproxyLoader: ImageLoader = ({ src, width, quality = 75 }) =>
     .quality(quality)
     .build({
       path: src,
-      baseUrl: process.env.NEXT_PUBLIC_IMGPROXY_URL,
+      baseUrl: env.NEXT_PUBLIC_IMGPROXY_URL,
       plain: true,
     });
 

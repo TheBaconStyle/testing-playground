@@ -1,22 +1,11 @@
-'use client';
-import { reactAuthCLient } from '@/features/auth/api/react';
-import { Alert, Box, Button } from '@mui/material';
+// 'use client';
+import { Box } from '@mui/material';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Habbins — Панель управления',
+};
 
 export default function DashboardPage() {
-  return (
-    <Box>
-      Dashboard page
-      <Button
-        onClick={() => {
-          reactAuthCLient
-            .isUsernameAvailable({ username: 'qwe' })
-            .then(JSON.stringify)
-            .then(alert);
-        }}
-      >
-        Qwe
-      </Button>
-      <Alert severity="info">Qwe</Alert>
-    </Box>
-  );
+  return <Box>Dashboard page</Box>;
 }
