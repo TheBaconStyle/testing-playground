@@ -43,7 +43,7 @@
   "private": true,
   "scripts": {
     "build": "next build && cpy .next/static .next/standalone/apps/frontend && cpy public .next/standalone/apps/frontend",
-    "dev": "next dev --port 80",
+    "dev": "dotenvx run -- next dev",
     "dev:email": "email dev --dir src/views/email/ui --port 3001",
     "lint": "eslint --fix",
     "start": "dotenvx run -- .next/standalone/apps/frontend/server.js",
