@@ -7,6 +7,7 @@ import { apiReference } from '@scalar/nestjs-api-reference';
 import { AuthService } from '@kylegillen/nestjs-fastify-better-auth';
 import { AppModule } from './app.module';
 import { TAuthService } from './auth/auth.config';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -28,12 +29,11 @@ async function bootstrap() {
     );
   }
 
+  const config = app.get(ConfigService)
+
   app.enableCors({
     origin: [
-      'localhost:3000',
-      'www.baconcs.duckdns.org',
-      '3rs27bxx-3000.inc1.devtunnels.ms',
-      'client.scalar.com',
+      config.getOrThrow('BETTER_AUTH_URL'),
     ],
     credentials: true,
   });

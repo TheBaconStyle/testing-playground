@@ -101,7 +101,10 @@ import { HabitsModule } from './habits/habits.module';
         const YANDEX_CLIENT_ID = config.getOrThrow('AUTH_YANDEX_ID');
         const YANDEX_CLIENT_SECRET = config.getOrThrow('AUTH_YANDEX_SECRET');
 
+        const publicDomain = config.getOrThrow('BETTER_AUTH_URL')
+
         const auth = betterAuth({
+          trustedOrigins: [publicDomain],
           ...defaultAuthOptions,
           database: drizzleAdapter(db, { schema, provider: 'pg' }),
           socialProviders: {

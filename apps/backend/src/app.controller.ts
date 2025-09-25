@@ -37,7 +37,7 @@ export class AppController {
         .select({
           habitId: schema.habitCheckmark.habitId,
           checkDate: schema.habitCheckmark.date,
-          rowNumber: sql`ROW_NUMBER() OVER (PARTITION BY habitId ORDER BY checkDate)`,
+          rowNumber: sql`ROW_NUMBER() OVER (PARTITION BY habitId ORDER BY checkDate)`.as('rowNumber'),
         })
         .from(schema.habitCheckmark),
     );
@@ -46,16 +46,16 @@ export class AppController {
         .select({
           habitId: rankedDates.habitId,
           checkDate: rankedDates.checkDate,
-          groupId: sql`${rankedDates.checkDate} - (${rankedDates.rowNumber} * INTERVAL '1 day')`,
+          groupId: sql`${rankedDates.checkDate} - (${rankedDates.rowNumber} * INTERVAL '1 day')`.as('groupId'),
         })
         .from(rankedDates),
     );
 
     const habitStats = await this.db.select({
       habitId: streakGroups.habitId,
-      lastCheckDate: sql<number>`MAX(${streakGroups.checkDate})`,
-      currentStreak: sql<number>`COUNT(*)`,
-      longestStreak: sql<number>`MAX(COUNT(*)) OVER (PARTITION BY ${streakGroups.habitId})`,
+      lastCheckDate: sql<number>`MAX(${streakGroups.checkDate})`.as('lastCheckDate'),
+      currentStreak: sql<number>`COUNT(*)`.as('currentStreak'),
+      longestStreak: sql<number>`MAX(COUNT(*)) OVER (PARTITION BY ${streakGroups.habitId})`.as('longestStreak'),
     }).from(streakGroups).groupBy(streakGroups.habitId, streakGroups.groupId).orderBy(streakGroups.habitId, desc(streakGroups.habitId))
   }
 }
