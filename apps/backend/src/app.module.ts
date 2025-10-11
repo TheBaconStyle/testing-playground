@@ -3,6 +3,7 @@ import { AuthModule } from '@kylegillen/nestjs-fastify-better-auth';
 import { MailerModule, MailerService } from '@nestjs-modules/mailer';
 import { Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { render } from '@react-email/render';
 import { ReactAdapter } from '@webtre/nestjs-mailer-react-adapter';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
@@ -18,7 +19,7 @@ import {
   yandexOAuthDefaultOptions,
 } from './auth/auth.config';
 import { DB_TAG } from './db/db.config';
-import { renderToHTML } from './email/templates/signin';
+import SignInEmail from './email/templates/signin';
 import { HabitsModule } from './habits/habits.module';
 
 @Module({
@@ -133,7 +134,7 @@ import { HabitsModule } from './habits/habits.module';
                 to: user.email,
                 template: 'signin',
                 subject: 'Verify your email',
-                html: await renderToHTML({ url }),
+                html: await render(SignInEmail({ url })),
               });
             },
           },

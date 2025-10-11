@@ -34,6 +34,17 @@ export default async function AuthLayout({
             position: 'absolute',
             width: '100%',
             display: 'flex',
+            justifyContent: 'flex-start',
+            p: 2,
+          }}
+        >
+          <ThemeSwitch currentTheme={theme} />
+        </Box>
+        <Box
+          sx={{
+            position: 'absolute',
+            width: '100%',
+            display: 'flex',
             justifyContent: 'flex-end',
             p: 2,
           }}

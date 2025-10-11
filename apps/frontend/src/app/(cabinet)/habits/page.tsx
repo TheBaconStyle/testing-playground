@@ -1,3 +1,7 @@
 export default function HabitsPage() {
-  return <div>habits page</div>;
+  return (
+    <>
+      <div>habits page</div>
+    </>
+  );
 }

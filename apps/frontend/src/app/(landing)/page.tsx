@@ -1,26 +1,63 @@
+import { apiAuthClient } from '@/features/auth/api/auth';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardMedia,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import Link from 'next/link';
+import { AdvantageCard, TAdvantageCard } from './AdvantageCard';
 import { ESectionID } from './sections';
 
 export const metadata: Metadata = {
   title: 'Habbins — Привычки в вашем распоряжении',
 };
 
-export default function Home() {
+const howItWorks: TAdvantageCard[] = [
+  {
+    title: 'Создай привычку',
+    description: 'Определи цель, настрой периодичность и получай напоминания',
+    image: <EditNoteIcon sx={{ width: 75, height: 75 }} />,
+  },
+  {
+    title: 'Отмечай выполнение',
+    description: 'Отмечай выполнение каждой привычки, чтобы не забыть',
+    image: <PlaylistAddCheckIcon sx={{ width: 75, height: 75 }} />,
+  },
+  {
+    title: 'Отслеживай результаты',
+    description: 'Получай аналитику и прогресс по каждой привычке',
+    image: <QueryStatsIcon sx={{ width: 75, height: 75 }} />,
+  },
+];
+
+const benefits: TAdvantageCard[] = [
+  {
+    title: 'Минимализм и фокус',
+    description: 'Интерфейс без отвлекающих элементов',
+    image: <PsychologyIcon sx={{ width: 75, height: 75 }} />,
+  },
+  {
+    title: 'Умные напоминания',
+    description: 'Настраиваемые уведомления в нужное время',
+    image: <AlarmIcon sx={{ width: 75, height: 75 }} />,
+  },
+  {
+    title: 'Аналитика и прогресс',
+    description: 'Наглядные графики и отчёты по привычкам',
+    image: <QueryStatsIcon sx={{ width: 75, height: 75 }} />,
+  },
+];
+
+export default async function Home() {
+  const headersStore = await headers();
+
+  const authInfo = await apiAuthClient.getSession({
+    fetchOptions: { headers: headersStore },
+  });
+
   return (
     <Box
       sx={{
@@ -51,7 +88,8 @@ export default function Home() {
         </Typography>
 
         <Button component={Link} href="/dashboard" variant="contained">
-          Попробовать бесплатно
+          {!authInfo.data?.user && <>Попробовать бесплатно</>}
+          {authInfo.data?.user && <>Войти в личный кабинет</>}
         </Button>
       </Box>
       <Box
@@ -74,60 +112,9 @@ export default function Home() {
         </Typography>
 
         <Stack gap={2} flexDirection="row" justifyContent="space-around">
-          <Card sx={{ width: '400px' }}>
-            <CardMedia sx={{ display: 'flex', justifyContent: 'center' }}>
-              <EditNoteIcon sx={{ width: 75, height: 75 }} />
-            </CardMedia>
-            <CardContent>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="div"
-                textAlign="center"
-              >
-                Создай привычку
-              </Typography>
-              <Typography>
-                Определи цель, настрой периодичность и получай напоминания
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ width: '400px' }}>
-            <CardMedia sx={{ display: 'flex', justifyContent: 'center' }}>
-              <PlaylistAddCheckIcon sx={{ width: 75, height: 75 }} />
-            </CardMedia>
-            <CardContent>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="div"
-                textAlign="center"
-              >
-                Отмечай выполнение
-              </Typography>
-              <Typography>
-                Просто отмечай галочкой каждый выполненный шаг
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ width: '400px' }}>
-            <CardMedia sx={{ display: 'flex', justifyContent: 'center' }}>
-              <QueryStatsIcon sx={{ width: 75, height: 75 }} />
-            </CardMedia>
-            <CardContent>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="div"
-                textAlign="center"
-              >
-                Следи за прогрессом
-              </Typography>
-              <Typography>
-                Аналитика, графики и серии помогут сохранить мотивацию
-              </Typography>
-            </CardContent>
-          </Card>
+          {howItWorks.map((c, index) => (
+            <AdvantageCard {...c} key={index} />
+          ))}
         </Stack>
       </Box>
       <Box
@@ -146,60 +133,9 @@ export default function Home() {
         </Typography>
 
         <Stack gap={2} flexDirection="row" justifyContent="space-around">
-          <Card sx={{ width: '400px' }}>
-            <CardMedia sx={{ display: 'flex', justifyContent: 'center' }}>
-              <PsychologyIcon sx={{ width: 75, height: 75 }} />
-            </CardMedia>
-            <CardContent>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="div"
-                textAlign="center"
-              >
-                Минимализм и фокус
-              </Typography>
-              <Typography>
-                Интерфейс без отвлекающих элементов — только ты и твои цели
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ width: '400px' }}>
-            <CardMedia sx={{ display: 'flex', justifyContent: 'center' }}>
-              <AlarmIcon sx={{ width: 75, height: 75 }} />
-            </CardMedia>
-            <CardContent>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="div"
-                textAlign="center"
-              >
-                Умные напоминания
-              </Typography>
-              <Typography>
-                Настраиваемые уведомления в нужное время, чтобы не забывать
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ width: '400px' }}>
-            <CardMedia sx={{ display: 'flex', justifyContent: 'center' }}>
-              <QueryStatsIcon sx={{ width: 75, height: 75 }} />
-            </CardMedia>
-            <CardContent>
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="div"
-                textAlign="center"
-              >
-                Аналитика и прогресс
-              </Typography>
-              <Typography>
-                Наглядные графики и отчёты по твоим привычкам
-              </Typography>
-            </CardContent>
-          </Card>
+          {benefits.map((c, index) => (
+            <AdvantageCard {...c} key={index} />
+          ))}
         </Stack>
       </Box>
     </Box>

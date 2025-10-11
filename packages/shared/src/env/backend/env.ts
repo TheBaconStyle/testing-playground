@@ -7,6 +7,7 @@ export const env = createEnv({
   server:{
     // APP
     NODE_ENV: z.string(),
+    PORT: z.coerce.number().optional(),
     // DB
     DB_HOST: z.string(),
     DB_PORT: z.coerce.number(),
@@ -26,7 +27,7 @@ export const env = createEnv({
     // SMTP
     SMTP_HOST: z.string(),
     SMTP_PORT: z.coerce.number(),
-    SMTP_SECURE: z.coerce.boolean(),
+    SMTP_SECURE: z.coerce.boolean().optional(),
     SMTP_USER: z.string(),
     SMTP_PASSWORD: z.string(),
     // S3

@@ -1,4 +1,3 @@
-import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "./schema";
 
 export function createConnectionString(
@@ -10,8 +9,6 @@ export function createConnectionString(
 ) {
   return `postgres://${user}:${password}@${host}:${port}/${dbName}`;
 }
-
-export type DB = NodePgDatabase<typeof schema>;
 
 export { schema };
 
