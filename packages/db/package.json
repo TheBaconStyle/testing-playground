@@ -17,12 +17,12 @@
   "scripts": {
     "generate": "dotenvx run -- drizzle-kit generate",
     "migrate": "dotenvx run -- drizzle-kit migrate",
+    "studio": "dotenvx run -- drizzle-kit studio",
     "drop": "dotenvx run -- drizzle-kit drop",
     "push": "dotenvx run -- drizzle-kit push",
     "pull": "dotenvx run -- drizzle-kit pull",
     "build": "rimraf lib && tsc",
-    "build:migration": "ncc build ./src/migration.ts -o build -m",
-    "dev": "tsc -w"
+    "build:migration": "ncc build ./src/migration.ts -o build -m"
   },
   "license": "UNLICENSED",
   "description": "",

@@ -4,9 +4,6 @@ node_modules
 !example.env
 www
 data
-dist
 .turbo
-packages/**/lib
 .next
-.next/**
 traefik
