@@ -1,8 +1,29 @@
-'use server'
-import { rpcClient } from '@/features/rpc';
+'use server';
 
-export async function Qwe() {
-  
-  const result = await rpcClient.api.habits.$get()
-  return result.text();
+import { createSDKConnection } from '@/features/sdk/api/connection';
+import { createAuthHeaders } from '@/features/sdk/lib/createAuthHeaders';
+import { functional, HttpError } from 'sdk';
+
+export async function action() {
+  const authHeaders = await createAuthHeaders();
+
+  const connection = createSDKConnection({ headers: authHeaders });
+
+  const result = await functional.api.v1.habits
+    .newHabit(connection, { name: 'test', goal: 'test' })
+    .then((res) => {
+      return {
+        success: true,
+        data: res,
+      };
+    })
+    .catch((e) => {
+      if (e instanceof HttpError) {
+        return { success: false, message: e.message };
+      }
+
+      return { success: false, message: 'Unknown error' };
+    });
+
+  return result;
 }

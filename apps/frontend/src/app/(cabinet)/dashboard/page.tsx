@@ -1,4 +1,4 @@
-// 'use client';
+import { BreadCrumbs } from '@/widgets/Breadcrumbs/ui/BreadCrumbs';
 import { Box } from '@mui/material';
 import { Metadata } from 'next';
 import { Test } from './Test';
@@ -9,9 +9,10 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   return (
-    <Box>
-      Dashboard page
+    <>
+      <BreadCrumbs auto localization={{ '/dashboard': 'Панель управления' }} />
+      <Box>Dashboard page</Box>
       <Test />
-    </Box>
+    </>
   );
 }

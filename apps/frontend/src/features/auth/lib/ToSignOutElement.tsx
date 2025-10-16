@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 export function ToSignOutButton<T extends HTMLAttributes<HTMLElement>>(
   Comp: ComponentType<T>,
 ) {
-  return (props: T) => {
+  const Composite = (props: T) => {
     const router = useRouter();
     return (
       <Comp
@@ -19,4 +19,8 @@ export function ToSignOutButton<T extends HTMLAttributes<HTMLElement>>(
       />
     );
   };
+
+  Composite.displayName = 'Composite';
+
+  return Composite;
 }

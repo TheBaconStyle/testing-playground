@@ -1,17 +1,14 @@
-import { BreadCrumbs } from '@/widgets/Breadcrumbs/ui/BreadCrumbs';
+import { BreadCrumbsContainer } from '@/widgets/Breadcrumbs/ui/BreadCrumbsContainer';
 import { Header } from '@/widgets/Header/ui/Header';
-import { Box, Paper } from '@mui/material';
-import type { PropsWithChildren } from 'react';
+import { Box } from '@mui/material';
 import { SideBar } from './SideBar';
 
-export default async function GeneralLayout({ children }: PropsWithChildren) {
+export default async function GeneralLayout({ children }: LayoutProps<'/'>) {
   return (
     <>
       <Header>
-        <BreadCrumbs
+        <BreadCrumbsContainer
           sx={{ margin: 'auto', display: { xs: 'none', md: 'block' } }}
-          basePathLabel="Панель управления"
-          basePath="/dashboard"
         />
       </Header>
       <Box

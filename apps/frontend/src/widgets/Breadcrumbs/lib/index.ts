@@ -1,45 +1,39 @@
-'use client';
-import { createContext, use } from 'react';
+import { URLPattern } from 'urlpattern-polyfill';
+export const BREADCRUMBS_ID = 'breadCrumbs';
 
 export type CrumbPath = {
-  href: string;
   label: string;
-  isLink?: boolean;
+  href?: string;
 };
 
-export type TBreadcrumbsServiceData = {
-  paths: CrumbPath[];
-  setPaths: (newPaths: CrumbPath[]) => void;
-};
+export function generateBreadCrumbs(
+  pathname: string,
+  localization?: Partial<Record<string, string>>,
+): CrumbPath[] {
+  const pattern = new URLPattern({
+    pathname,
+  });
 
-export type TBreadCrumbsData = {
-  paths: CrumbPath[];
-  replacePathLabel: (
-    href: string,
-    newSettings: Partial<Omit<CrumbPath, 'href'>>,
-  ) => boolean;
-};
+  const paths = pathname.split('/').filter(Boolean);
 
-const breadCrumbsDefaultServiceData: TBreadcrumbsServiceData = {
-  paths: [],
-  setPaths: () => {},
-};
+  return paths.map((path, index) => {
+    const crumbURL = new URL(
+      paths.slice(0, index + 1).join('/'),
+      process.env.NEXT_PUBLIC_DOMAIN!,
+    );
 
-const breadCrumbDefaultData: TBreadCrumbsData = {
-  paths: [],
-  replacePathLabel: () => false,
-};
+    const isCurrent = pattern.test(crumbURL);
 
-export const BreadCrumbServiceContext = createContext<TBreadcrumbsServiceData>(
-  breadCrumbsDefaultServiceData,
-);
+    const label = localization?.[crumbURL.pathname] ?? path;
 
-export const BreadCrumbContext = createContext<TBreadCrumbsData>(
-  breadCrumbDefaultData,
-);
+    if (!isCurrent)
+      return {
+        href: crumbURL.pathname,
+        label,
+      };
 
-
-
-export const useBreadCrumbService = () => use(BreadCrumbServiceContext);
-
-export const useBreadCrumbs = () => use(BreadCrumbContext);
+    return {
+      label,
+    };
+  });
+}

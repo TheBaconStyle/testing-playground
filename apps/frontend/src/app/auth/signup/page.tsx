@@ -75,7 +75,7 @@ export default function SignUpPage() {
       confirm: '',
     },
     async onSubmit({ value }) {
-      const { confirm, ...registerData } = value;
+      const { confirm: _, ...registerData } = value;
 
       const signUpResult = await muiToast.promise(
         reactAuthCLient.signUp.email({

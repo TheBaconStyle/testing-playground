@@ -1,62 +1,63 @@
 'use client';
 
-import { Breadcrumbs, type BreadcrumbsProps, Typography } from '@mui/material';
+import { BREADCRUMBS_ID, generateBreadCrumbs } from '@/widgets/Breadcrumbs/lib';
+import { Breadcrumbs, BreadcrumbsProps } from '@mui/material';
 import { usePathname } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
-import { type CrumbPath } from '../lib';
-import { useBreadCrumbService } from '../lib';
+import { useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { CrumbLink } from './CrumbLink';
+import { Route } from 'next';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
-export type TBreadcrumbsContainer = {
-  basePath?: string;
-  basePathLabel?: string;
+export type TBreadCrumbs = {
+  childrenOrigin?: 'before' | 'after';
+  auto?: boolean;
+  localization?: Partial<{
+    [K in Route]: string;
+  }>;
 } & BreadcrumbsProps;
 
 export function BreadCrumbs({
-  basePath = '/',
-  basePathLabel = 'Главная',
+  childrenOrigin,
+  auto,
+  localization,
   ...props
-}: TBreadcrumbsContainer) {
-  const pathname = usePathname();
-
-  const generatedBreadcrumbPaths: CrumbPath[] = useMemo(() => {
-    const newPaths = pathname
-      .split('/')
-      .filter((item) => item !== basePath.replace('/', ''))
-      .filter(Boolean)
-      .map((path, index, paths) => ({
-        href: `/${paths.slice(0, index + 1).join('/')}`,
-        label: path,
-      }));
-    return [
-      { href: basePath, label: basePathLabel, isLink: true },
-      ...newPaths,
-    ];
-  }, [basePath, basePathLabel, pathname]);
-
-  const { paths, setPaths } = useBreadCrumbService();
+}: TBreadCrumbs) {
+  const [container, setContainer] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    setPaths([...generatedBreadcrumbPaths]);
-  }, [setPaths, generatedBreadcrumbPaths]);
+    setContainer(window.document.getElementById(BREADCRUMBS_ID));
+  }, []);
 
-  const defaultPaths = paths.length === 0 ? generatedBreadcrumbPaths : paths;
+  const pathname = usePathname();
+
+  const breadCrumbLinks = useMemo(
+    () => generateBreadCrumbs(pathname, localization),
+    [pathname, localization],
+  );
+
+  if (!container) return null;
 
   return (
-    <Breadcrumbs
-      {...props}
-      sx={{ ...props.sx, userSelect: 'none', color: 'inherit' }}
-    >
-      {defaultPaths.map(({ label, href, isLink }, index, arr) => {
-        if (index !== arr.length - 1 && !!isLink) {
-          return (
-            <CrumbLink href={href} underline="hover" key={href}>
-              {label}
-            </CrumbLink>
-          );
-        }
-        return <Typography key={href}>{label}</Typography>;
-      })}
-    </Breadcrumbs>
+    <>
+      {createPortal(
+        <Breadcrumbs
+          {...props}
+          sx={{ ...props.sx, userSelect: 'none', color: 'inherit' }}
+        >
+          {childrenOrigin === 'before' && props.children}
+          {auto &&
+            breadCrumbLinks.map((link) => (
+              <CrumbLink href={link.href} key={link.href}>
+                {link.label}
+              </CrumbLink>
+            ))}
+          {props.children}
+          {childrenOrigin === 'after' && props.children}
+        </Breadcrumbs>,
+        container!,
+      )}
+    </>
   );
 }

@@ -31,8 +31,8 @@ export function NestedListItemButton({
   );
 
   useEffect(() => {
-    !!route && setOpen(pathname.startsWith(route));
-  }, [pathname]);
+    if (!!route) setOpen(pathname.startsWith(route));
+  }, [pathname, route]);
 
   const handleClick = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {

@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
 import { Toaster } from 'sonner';
-import { BreadCrumbProvider } from '@/widgets/Breadcrumbs/ui/BreadCrumbProvider';
 import { getTheme } from '../features/theme/api';
 import { MuiThemeProvider, NextThemeProvider } from '../features/theme/ui';
 
@@ -27,7 +26,7 @@ export default async function RootLayout({
       >
         <NextThemeProvider defaultTheme={userTheme}>
           <MuiThemeProvider theme={userTheme}>
-            <BreadCrumbProvider>{children}</BreadCrumbProvider>
+            {children}
             <Toaster toastOptions={{ unstyled: true }} />
           </MuiThemeProvider>
         </NextThemeProvider>

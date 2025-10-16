@@ -60,17 +60,17 @@ export default function SignInPage() {
         callbackURL: callbackUrl.href,
       });
 
-      // if (result.error) {
-      //   formApi.setErrorMap({
-      //     onDynamic: {
-      //       form: [
-      //         {
-      //           message: 'Ошибка',
-      //         },
-      //       ],
-      //     },
-      //   });
-      // }
+      if (signInResult.error) {
+        form.setErrorMap({
+          onDynamic: {
+            form: [
+              {
+                message: 'Ошибка',
+              },
+            ],
+          },
+        });
+      }
     },
   });
 

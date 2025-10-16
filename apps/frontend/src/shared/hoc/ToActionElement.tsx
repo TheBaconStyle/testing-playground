@@ -10,7 +10,7 @@ export const ToActionElement = <
 >(
   Comp: React.ComponentType<T>,
 ) => {
-  return (props: T & { action?: () => void }) => {
+  const Compose = (props: T & { action?: () => void }) => {
     const { action, onClick, ...compProps } = props;
 
     return (
@@ -23,4 +23,8 @@ export const ToActionElement = <
       />
     );
   };
+
+  Compose.displayName = `${Comp.displayName}WithActionHandler`;
+
+  return Compose;
 };

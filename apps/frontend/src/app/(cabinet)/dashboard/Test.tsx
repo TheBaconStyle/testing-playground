@@ -1,8 +1,12 @@
 'use client';
 
 import { Button } from '@mui/material';
-import { Qwe } from './action';
+import { action } from './action';
 
 export function Test() {
-  return <Button onClick={() => Qwe().then(alert)}>click me</Button>;
+  return (
+    <Button onClick={async () => alert(JSON.stringify(await action()))}>
+      Action
+    </Button>
+  );
 }

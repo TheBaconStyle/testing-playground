@@ -4,7 +4,11 @@ import { cookies } from 'next/headers';
 
 export async function setTheme(theme: string) {
   const userCookies = await cookies();
-  userCookies.set('app-theme', theme);
+  userCookies.set('app-theme', theme, {
+    secure: true,
+    httpOnly: true,
+    sameSite: true,
+  });
 }
 
 export async function getTheme() {

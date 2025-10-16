@@ -1,6 +1,6 @@
-import { apiAuthClient } from '../../../../features/auth/api/auth';
-import { EditProfille } from '../../../../features/profile/ui/EditProfile';
-import CrumbLabel from '@/widgets/Breadcrumbs/ui/СrumbLabel';
+import { apiAuthClient } from '@/features/auth/api/auth';
+import { EditProfille } from '@/features/profile/ui/EditProfile';
+import { BreadCrumbs } from '@/widgets/Breadcrumbs/ui/BreadCrumbs';
 import { Box, Typography } from '@mui/material';
 import { headers } from 'next/headers';
 
@@ -13,7 +13,7 @@ export default async function ProtectedPage() {
 
   return (
     <Box pt={2}>
-      <CrumbLabel href="/profile" label="Профиль" />
+      <BreadCrumbs auto localization={{ '/dashboard': 'Панель управления' }} />
       <Typography>{data && JSON.stringify(data.user)}</Typography>
       <EditProfille />
     </Box>
