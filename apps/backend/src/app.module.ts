@@ -1,7 +1,7 @@
 import { DrizzlePGModule } from '@knaadh/nestjs-drizzle-pg';
-import { AuthModule } from '@kylegillen/nestjs-fastify-better-auth';
+import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { MailerModule, MailerService } from '@nestjs-modules/mailer';
-import { Logger, Module, type OnModuleInit } from '@nestjs/common';
+import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { render } from '@react-email/render';
 import { ReactAdapter } from '@webtre/nestjs-mailer-react-adapter';
@@ -90,7 +90,10 @@ import { HabitsModule } from './habits/habits.module';
       },
     }),
     AuthModule.forRootAsync({
+      isGlobal: true,
       inject: [ConfigService, MailerService, DB_TAG],
+      disableGlobalAuthGuard: true,
+      disableBodyParser: true,
       async useFactory(
         config: ConfigService,
         mail: MailerService,
@@ -102,7 +105,7 @@ import { HabitsModule } from './habits/habits.module';
         const YANDEX_CLIENT_ID = config.getOrThrow('AUTH_YANDEX_ID');
         const YANDEX_CLIENT_SECRET = config.getOrThrow('AUTH_YANDEX_SECRET');
 
-        const publicDomain = config.getOrThrow('BETTER_AUTH_URL')
+        const publicDomain = config.getOrThrow('BETTER_AUTH_URL');
 
         const auth = betterAuth({
           trustedOrigins: [publicDomain],
@@ -132,15 +135,14 @@ import { HabitsModule } from './habits/habits.module';
             async sendVerificationEmail({ user, url }) {
               await mail.sendMail({
                 to: user.email,
-                template: 'signin',
                 subject: 'Verify your email',
                 html: await render(SignInEmail({ url })),
               });
             },
           },
-        }) as any;
+        });
 
-        return auth;
+        return { auth };
       },
     }),
     HabitsModule,

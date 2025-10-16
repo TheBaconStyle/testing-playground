@@ -1,40 +1,36 @@
-import { NestFactory } from '@nestjs/core';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import { apiReference } from '@scalar/nestjs-api-reference';
-import { AuthService } from '@kylegillen/nestjs-fastify-better-auth';
-import { AppModule } from './app.module';
-import { TAuthService } from './auth/auth.config';
+import { VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { apiReference } from '@scalar/nestjs-api-reference';
+import { AuthService } from '@thallesp/nestjs-better-auth';
+import { AppModule } from './app.module';
+import { TAuth } from './auth/auth.config';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter(),
-    {
-      bodyParser: false,
-    },
-  );
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bodyParser: false,
+  });
+
+  app.setGlobalPrefix('api');
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+    prefix: 'v',
+  });
 
   if (process.env.NODE_ENV !== 'production') {
-    const authService = app.get<AuthService<TAuthService>>(AuthService);
+    const authService = app.get<AuthService<TAuth>>(AuthService);
 
     const openApiReference = await authService.api.generateOpenAPISchema();
 
-    app.use(
-      '/api/auth/reference',
-      apiReference({ withFastify: true, content: openApiReference }),
-    );
+    app.use('/api/auth/reference', apiReference({ content: openApiReference }));
   }
 
-  const config = app.get(ConfigService)
+  const config = app.get(ConfigService);
 
   app.enableCors({
-    origin: [
-      config.getOrThrow('BETTER_AUTH_URL'),
-    ],
+    origin: [config.getOrThrow('BETTER_AUTH_URL')],
     credentials: true,
   });
 

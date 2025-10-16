@@ -6,6 +6,6 @@ import { HabitsService } from './habits.service';
   imports: [],
   controllers: [HabitsController],
   providers: [HabitsService],
-  exports: [HabitsService]
+  exports: [HabitsService],
 })
 export class HabitsModule {}

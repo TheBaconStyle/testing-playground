@@ -19,5 +19,3 @@ export const db = drizzle(
 );
 
 export type DB = NodePgDatabase<typeof schema>;
-
-

@@ -12,7 +12,7 @@ import { ac, admin, user } from 'shared/auth/roles';
 import { db } from '../db/db.config';
 import { v7 } from 'uuid';
 import { schema } from 'db';
-import { AuthService } from '@kylegillen/nestjs-fastify-better-auth';
+import { AuthService } from '@thallesp/nestjs-better-auth';
 
 export const yandexOAuthDefaultOptions: Pick<
   GenericOAuthConfig,
@@ -61,10 +61,7 @@ export const defaultAuthPlugins = [
 
 export const defaultAuthOptions = {
   database: drizzleAdapter(db, { schema, provider: 'pg' }),
-  plugins: [
-    ...defaultAuthPlugins,
-    genericOAuth({ config: [] }),
-  ],
+  plugins: [...defaultAuthPlugins, genericOAuth({ config: [] })],
   emailVerification: {
     autoSignInAfterVerification: true,
     sendOnSignUp: true,
@@ -95,6 +92,4 @@ export const defaultAuthOptions = {
   },
 };
 
-type TAuth = ReturnType<typeof betterAuth<typeof defaultAuthOptions>>
-
-export type TAuthService = AuthService<TAuth>;
+export type TAuth = ReturnType<typeof betterAuth<typeof defaultAuthOptions>>;

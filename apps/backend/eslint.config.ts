@@ -42,5 +42,5 @@ export default defineConfig([
     },
   },
 
-  globalIgnores(['**/.eslintrc.js']),
+  globalIgnores(['**/.eslintrc.js', '**/nestia.config.ts', '**/eslint.config.ts']),
 ]);
