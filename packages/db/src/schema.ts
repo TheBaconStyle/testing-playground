@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
-  jsonb,
+  integer,
   pgSchema,
   text,
   timestamp,
@@ -107,6 +107,15 @@ export const habit = dbSchema.table("habit", {
   codeName: varchar("code_name", { length: 256 }).notNull(),
   description: text("description"),
   icon: text("icon"),
+  start: timestamp("start", {
+    mode: "date",
+    withTimezone: true,
+  }).notNull().defaultNow(),
+  finish: timestamp("finish", {
+    mode: "date",
+    withTimezone: true,
+  }),
+  reminerRule: text("reminder_rule"),
   createdAt: timestamp("created_at", {
     mode: "date",
     withTimezone: true,
@@ -123,10 +132,7 @@ export const habit = dbSchema.table("habit", {
 });
 
 export const habitRelations = relations(habit, ({ many }) => ({
-  // streaks: many(streak),
-  // categories: many(habitCategory),
   checkmarks: many(habitCheckmark),
-  reminders: many(reminder),
 }));
 
 export const habitCheckmark = dbSchema.table("habit_checkmark", {
@@ -136,11 +142,17 @@ export const habitCheckmark = dbSchema.table("habit_checkmark", {
     .references(() => habit.id, { onDelete: "cascade", onUpdate: "cascade" }),
   date: timestamp("date", { mode: "date", withTimezone: true }).notNull(),
   value: boolean("checked").notNull(),
+  percentage: integer('percentage'),
   note: text("note"),
   createdAt: timestamp("created_at", {
     mode: "date",
     withTimezone: true,
   }).defaultNow(),
+  exceptReason: text("except_reason"),
+  updatedAt: timestamp("updated_at", {
+    mode: "date",
+    withTimezone: true,
+  }).$onUpdate(() => new Date()),
 });
 
 export const habitCheckmarksRelations = relations(
@@ -152,113 +164,3 @@ export const habitCheckmarksRelations = relations(
     }),
   })
 );
-
-// export const category = dbSchema.table("category", {
-//   id: uuid("id").primaryKey().defaultRandom(),
-//   name: varchar("name", { length: 256 }).notNull(),
-//   codeName: varchar("code_name", { length: 256 }).notNull(),
-// });
-
-// export const categoryRelations = relations(category, ({ many }) => ({
-//   habits: many(habitCategory),
-//   parentCategories: many(categoryToCategory),
-//   childCategories: many(categoryToCategory),
-// }));
-
-// export const habitCategory = dbSchema.table(
-//   "habit_category",
-//   {
-//     habitId: uuid("habit_id")
-//       .references(() => habit.id, { onDelete: "cascade", onUpdate: "cascade" })
-//       .notNull(),
-//     categoryId: uuid("category_id")
-//       .references(() => category.id, {
-//         onDelete: "cascade",
-//         onUpdate: "cascade",
-//       })
-//       .notNull(),
-//   },
-//   (t) => [primaryKey({ columns: [t.categoryId, t.habitId] })]
-// );
-
-// export const habitCategoryRelations = relations(habitCategory, ({ one }) => ({
-//   habit: one(habit, {
-//     fields: [habitCategory.habitId],
-//     references: [habit.id],
-//   }),
-//   category: one(category, {
-//     fields: [habitCategory.categoryId],
-//     references: [category.id],
-//   }),
-// }));
-
-// export const categoryToCategory = dbSchema.table(
-//   "category_to_category",
-//   {
-//     parentCategoryId: uuid("parent_category_id")
-//       .references(() => category.id, {
-//         onDelete: "cascade",
-//         onUpdate: "cascade",
-//       })
-//       .notNull(),
-//     childCategoryId: uuid("child_category_id")
-//       .references(() => category.id, {
-//         onDelete: "cascade",
-//         onUpdate: "cascade",
-//       })
-//       .notNull(),
-//   },
-//   (t) => [primaryKey({ columns: [t.childCategoryId, t.parentCategoryId] })]
-// );
-
-// export const categoryToCategoryRelations = relations(
-//   categoryToCategory,
-//   ({ one }) => ({
-//     parentCategory: one(category, {
-//       fields: [categoryToCategory.parentCategoryId],
-//       references: [category.id],
-//     }),
-//     childCategory: one(category, {
-//       fields: [categoryToCategory.childCategoryId],
-//       references: [category.id],
-//     }),
-//   })
-// );
-
-export const reminder = dbSchema.table("reminder", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  habitId: uuid("habit_id")
-    .notNull()
-    .references(() => habit.id, { onDelete: "cascade", onUpdate: "cascade" }),
-  message: text("message"),
-  start: timestamp("start", {
-    mode: "date",
-    withTimezone: true,
-  }).notNull(),
-  rrule: text("rrule"),
-  exceptions: jsonb("exceptions"),
-  createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp("updated_at", {
-    mode: "date",
-    withTimezone: true,
-  }).$onUpdate(() => new Date()),
-});
-
-export const remindersRelations = relations(reminder, ({ one }) => ({
-  habit: one(habit, { fields: [reminder.habitId], references: [habit.id] }),
-}));
-
-// export const streak = dbSchema.table("streak", {
-//   id: uuid("id").primaryKey().defaultRandom(),
-//   habitId: uuid("habit_id")
-//     .notNull()
-//     .references(() => habit.id, { onDelete: "cascade", onUpdate: "cascade" }),
-//   start_date: timestamp("start_date", { mode: "date", withTimezone: true }),
-//   end_date: timestamp("end_date", { mode: "date", withTimezone: true }),
-// });
-
-// export const streakRelations = relations(streak, ({ one }) => ({
-//   habit: one(habit, { fields: [streak.habitId], references: [habit.id] }),
-// }));
