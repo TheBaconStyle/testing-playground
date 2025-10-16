@@ -2,6 +2,24 @@
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
   "tasks": {
+    "frontend#build": {
+      "dependsOn": ["sdk#build", "shared#build"]
+    },
+    "backend#build": {
+      "dependsOn": ["shared#build", "db#build"],
+      "outputs": ["build"]
+    },
+    "sdk#build": {
+      "dependsOn": ["db#build", "backend#build"],
+      "outputs": ["lib"]
+    },
+    "db#build": {
+      "outputs": ["lib"]
+    },
+    "shared#build": {
+      "dependsOn": ["db#build"],
+      "outputs": ["lib"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist", "lib"]
@@ -11,6 +29,18 @@
     },
     "check-types": {
       "dependsOn": ["^check-types"]
+    },
+    "frontend#dev": {
+      "dependsOn": ["sdk#build", "shared#build"],
+      "with": ["backend#dev"],
+      "persistent": true,
+      "cache": false
+    },
+    "backend#dev": {
+      "dependsOn": ["shared#build", "db#build"],
+      "with": ["frontend#dev"],
+      "persistent": true,
+      "cache": false
     },
     "dev": {
       "persistent": true,
