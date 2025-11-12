@@ -23,7 +23,9 @@ export class AppController {
     private readonly authService: AuthService<TAuth>,
     @InjectDrizzle(DB_TAG) private readonly db: DB,
   ) {}
-
+  /**
+   * Method description
+   */
   @TypedRoute.Get('qwe')
   async getHello(@Req() req: Request) {
     const requestHeaders = new Headers();

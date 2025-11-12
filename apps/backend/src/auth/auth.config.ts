@@ -1,5 +1,4 @@
-import { betterAuth, User } from 'better-auth';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { betterAuth, BetterAuthOptions, User } from 'better-auth';
 import {
   admin as adminPlugin,
   genericOAuth,
@@ -9,10 +8,7 @@ import {
 } from 'better-auth/plugins';
 import { cookiePrefix } from 'shared/auth/config';
 import { ac, admin, user } from 'shared/auth/roles';
-import { db } from '../db/db.config';
 import { v7 } from 'uuid';
-import { schema } from 'db';
-import { AuthService } from '@thallesp/nestjs-better-auth';
 
 export const yandexOAuthDefaultOptions: Pick<
   GenericOAuthConfig,
@@ -60,7 +56,6 @@ export const defaultAuthPlugins = [
 ];
 
 export const defaultAuthOptions = {
-  database: drizzleAdapter(db, { schema, provider: 'pg' }),
   plugins: [...defaultAuthPlugins, genericOAuth({ config: [] })],
   emailVerification: {
     autoSignInAfterVerification: true,
@@ -90,6 +85,6 @@ export const defaultAuthOptions = {
       },
     },
   },
-};
+} satisfies BetterAuthOptions;
 
 export type TAuth = ReturnType<typeof betterAuth<typeof defaultAuthOptions>>;

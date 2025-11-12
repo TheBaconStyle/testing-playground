@@ -1,0 +1,1 @@
+export type Keys<T, U extends keyof T> = U;

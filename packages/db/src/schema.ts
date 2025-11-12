@@ -115,7 +115,7 @@ export const habit = dbSchema.table("habit", {
     mode: "date",
     withTimezone: true,
   }),
-  reminerRule: text("reminder_rule"),
+  reminderRule: text("reminder_rule"),
   createdAt: timestamp("created_at", {
     mode: "date",
     withTimezone: true,

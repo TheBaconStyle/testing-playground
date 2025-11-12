@@ -8,7 +8,7 @@ import { ac, admin, user } from 'shared/auth/roles';
 import { env } from '@/shared/env';
 
 export const apiAuthClient = createAuthClient({
-  baseURL: `${env.API_URL}`,
+  baseURL: env.API_URL,
   plugins: [
     adminClient({
       ac,

@@ -3,7 +3,7 @@ import {
   type NextRequest,
   NextResponse
 } from 'next/server';
-import { apiAuthClient } from './features/auth/api/auth';
+import { apiAuthClient } from './features/auth/api/server';
 import { buildHostUrl, pathTest } from './shared/url/lib';
 
 const publicPaths = ['/', '/assets/*'];
@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
     fetchOptions: {
       headers: request.headers,
       next: {
-        tags: ['authorization']
+        tags: ['authorization'],
       }
     }
   })

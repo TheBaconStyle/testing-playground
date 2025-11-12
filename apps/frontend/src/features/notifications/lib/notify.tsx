@@ -4,7 +4,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
-import { TrueOmit } from '@/shared/types/omit';
+import { TrueOmit } from 'shared/types/omit';
 import type { ExternalToast } from 'sonner';
 import { CircularProgress } from '@mui/material';
 
@@ -48,7 +48,6 @@ export const muiToast = {
     promise
       .then((data) => {
         const toastData = messages.success(data);
-        toastData.color;
         muiToast[toastData.color ?? 'success']({ ...toastData, id: toastId });
       })
       .catch((err) => muiToast.error({ ...messages.error(err), id: toastId }));

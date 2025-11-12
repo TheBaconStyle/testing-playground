@@ -32,7 +32,7 @@ export const env = createEnv({
     SMTP_PASSWORD: z.string(),
     // S3
     MINIO_HOST: z.string(),
-    MINIO_PORT: z.coerce.number(),
+    MINIO_PORT: z.coerce.number().optional(),
     MINIO_ACCESS_KEY: z.string(),
     MINIO_SECRET_KEY: z.string(),
   }

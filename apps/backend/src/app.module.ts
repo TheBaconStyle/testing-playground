@@ -1,17 +1,15 @@
 import { DrizzlePGModule } from '@knaadh/nestjs-drizzle-pg';
-import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { MailerModule, MailerService } from '@nestjs-modules/mailer';
-import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
+import { Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { render } from '@react-email/render';
-import { ReactAdapter } from '@webtre/nestjs-mailer-react-adapter';
+import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { genericOAuth } from 'better-auth/plugins';
 import { createConnectionString, schema } from 'db';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { NestMinioModule } from 'nestjs-minio';
-import path from 'node:path';
 import { AppController } from './app.controller';
 import {
   defaultAuthOptions,
@@ -57,10 +55,12 @@ import { HabitsModule } from './habits/habits.module';
       isGlobal: true,
       inject: [ConfigService],
       useFactory(config: ConfigService) {
+        const port = Number(config.get<string>('MINIO_PORT'));
+
         return {
           endPoint: config.getOrThrow('MINIO_HOST'),
-          port: config.get('MINIO_PORT'),
-          useSSL: false,
+          port: !Number.isNaN(port) ? port : undefined,
+          useSSL: config.getOrThrow<string>('MINIO_SSL') === 'true',
           accessKey: config.getOrThrow('MINIO_ACCESS_KEY'),
           secretKey: config.getOrThrow('MINIO_SECRET_KEY'),
         };
@@ -79,10 +79,6 @@ import { HabitsModule } from './habits/habits.module';
               pass: config.getOrThrow('SMTP_PASSWORD'),
             },
           },
-          template: {
-            dir: path.resolve(__dirname, 'email', 'templates'),
-            adapter: new ReactAdapter(),
-          },
           defaults: {
             from: `"Habbins" <info@habbins.com>`,
           },
@@ -92,7 +88,6 @@ import { HabitsModule } from './habits/habits.module';
     AuthModule.forRootAsync({
       isGlobal: true,
       inject: [ConfigService, MailerService, DB_TAG],
-      disableGlobalAuthGuard: true,
       disableBodyParser: true,
       async useFactory(
         config: ConfigService,

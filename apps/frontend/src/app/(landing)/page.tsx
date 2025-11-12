@@ -1,4 +1,4 @@
-import { apiAuthClient } from '@/features/auth/api/auth';
+import { apiAuthClient } from '@/features/auth/api/server';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';

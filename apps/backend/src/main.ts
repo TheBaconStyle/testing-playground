@@ -1,3 +1,4 @@
+import { NestiaSwaggerComposer } from '@nestia/sdk';
 import { VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
@@ -19,12 +20,18 @@ async function bootstrap() {
     prefix: 'v',
   });
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'development') {
     const authService = app.get<AuthService<TAuth>>(AuthService);
 
     const openApiReference = await authService.api.generateOpenAPISchema();
 
     app.use('/api/auth/reference', apiReference({ content: openApiReference }));
+
+    const document = await NestiaSwaggerComposer.document(app, {
+      servers: [{ url: 'http://localhost:5000', description: 'Localhost' }],
+    });
+
+    app.use('/api/reference', apiReference({ content: document }));
   }
 
   const config = app.get(ConfigService);

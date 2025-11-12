@@ -26,9 +26,9 @@ const NESTIA_CONFIG: INestiaConfig = {
   output: '../../packages/sdk/src',
   distribute: '../../packages/sdk',
   clone: true,
-  // primitive: true,
+  primitive: true,
   // propagate: true,
-  // assert: true,
-  // json: true,
+  assert: true,
+  json: true,
 };
 export default NESTIA_CONFIG;

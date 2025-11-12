@@ -1,4 +1,4 @@
-import { apiAuthClient } from '@/features/auth/api/auth';
+import { apiAuthClient } from '@/features/auth/api/server';
 import { EditProfille } from '@/features/profile/ui/EditProfile';
 import { BreadCrumbs } from '@/widgets/Breadcrumbs/ui/BreadCrumbs';
 import { Box, Typography } from '@mui/material';

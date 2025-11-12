@@ -1,4 +1,4 @@
-import { apiAuthClient } from '@/features/auth/api/auth';
+import { apiAuthClient } from '@/features/auth/api/server';
 import { getTheme } from '@/features/theme/api';
 import { Today as TodayIcon } from '@mui/icons-material';
 import AppBar from '@mui/material/AppBar';
