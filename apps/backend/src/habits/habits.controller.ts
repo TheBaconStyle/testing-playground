@@ -1,18 +1,15 @@
-import { TypedBody, TypedRoute } from '@nestia/core';
-import { Controller, Logger, Req, UseGuards } from '@nestjs/common';
 import {
-  AuthGuard,
-  AuthService,
-  Session,
-  UserSession,
-} from '@thallesp/nestjs-better-auth';
-import { FastifyRequest } from 'fastify';
-import { TAuth } from '../auth/auth.config';
-
-export type TCreateHabitBody = {
-  name: string;
-  goal: string;
-};
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Logger,
+  Param,
+  Patch,
+  Post
+} from '@nestjs/common';
+import { CreateHabitDto, HabitsService, UpdateHabitDto } from './habits.service';
+import { Session, UserSession } from '@thallesp/nestjs-better-auth';
 
 export type TCreateHabitResponse = {
   success: boolean;
@@ -22,33 +19,39 @@ export type TCreateHabitResponse = {
 export class HabitsController {
   logger = new Logger(HabitsController.name);
 
-  constructor(private readonly authService: AuthService<TAuth>) {}
+  constructor(private readonly habitsService: HabitsService) {}
 
-  @TypedRoute.Post()
-  async newHabit(
-    @TypedBody() body: TCreateHabitBody,
-    @Req() req: FastifyRequest,
-    @Session() sess: UserSession,
-  ): Promise<TCreateHabitResponse> {
-    // const requestHeaders = new Headers();
-    // const headerEntries = Object.entries(req.headers);
-    // for (const [key, value] of headerEntries) {
-    //   if (value) requestHeaders.append(key, value.toString());
-    // }
-    // const sess = await this.authService.api.getSession({
-    //   headers: requestHeaders,
-    // });
+  @Post()
+  async create(
+    @Session() session: UserSession,
+    @Body() createHabitDto: CreateHabitDto,
+  ) {
+    this.logger.log(`User ${session.user.id} creating new habit: ${createHabitDto.name}`);
+    const newHabit = await this.habitsService.create(session.user.id, createHabitDto);
+    return newHabit;
+  }
 
-    // if (!sess) {
-    //   throw new UnauthorizedException();
-    // }
+  @Get()
+  async findAll(@Session() session: UserSession) {
+    return this.habitsService.findAll(session.user.id);
+  }
 
-    this.logger.log(JSON.stringify(body));
+  @Get(':id')
+  async findOne(@Session() session: UserSession, @Param('id') id: string) {
+    return this.habitsService.findOne(id, session.user.id);
+  }
 
-    if (Math.random() > 0.5) {
-      return { success: false };
-    }
+  @Patch(':id')
+  async update(
+    @Session() session: UserSession,
+    @Param('id') id: string,
+    @Body() updateHabitDto: UpdateHabitDto,
+  ) {
+    return this.habitsService.update(id, session.user.id, updateHabitDto);
+  }
 
-    return { success: true };
+  @Delete(':id')
+  async remove(@Session() session: UserSession, @Param('id') id: string) {
+    return this.habitsService.remove(id, session.user.id);
   }
 }

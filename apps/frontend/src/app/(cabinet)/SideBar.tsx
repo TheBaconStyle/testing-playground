@@ -8,11 +8,11 @@ import {
   ListItemText,
   Paper,
 } from '@mui/material';
-import Link from 'next/link';
 import { SignOutButton } from './SignOutButton';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Link } from '@/components/Link/Link';
 
 export function SideBar() {
   return (

@@ -7,7 +7,7 @@ import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { Metadata } from 'next';
 import { headers } from 'next/headers';
-import Link from 'next/link';
+import { Link } from '@/components/Link/Link';
 import { AdvantageCard, TAdvantageCard } from './AdvantageCard';
 import { ESectionID } from './sections';
 

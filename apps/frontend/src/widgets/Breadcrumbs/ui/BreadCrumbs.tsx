@@ -49,7 +49,7 @@ export function BreadCrumbs({
           {childrenOrigin === 'before' && props.children}
           {auto &&
             breadCrumbLinks.map((link) => (
-              <CrumbLink href={link.href} key={link.href}>
+              <CrumbLink href={link.href as Route} key={link.href}>
                 {link.label}
               </CrumbLink>
             ))}

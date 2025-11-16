@@ -1,19 +1,17 @@
+import { getTheme } from '@/features/theme/api';
+import MuiThemeProvider from '@/features/theme/ui/MuiThemeProvider';
 import { Box } from '@mui/material';
 import { Toaster } from 'sonner';
-import { getTheme } from '../features/theme/api';
-import { MuiThemeProvider, NextThemeProvider } from '../features/theme/ui';
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const userTheme = await getTheme();
-
   return (
     <html
       lang="ru"
-      suppressHydrationWarning
+      suppressHydrationWarning={true}
       style={{ scrollBehavior: 'smooth' }}
     >
       <Box
@@ -24,12 +22,10 @@ export default async function RootLayout({
           minHeight: '100vh',
         }}
       >
-        <NextThemeProvider defaultTheme={userTheme}>
-          <MuiThemeProvider theme={userTheme}>
-            {children}
-            <Toaster toastOptions={{ unstyled: true }} />
-          </MuiThemeProvider>
-        </NextThemeProvider>
+        <MuiThemeProvider>
+          {children}
+          <Toaster toastOptions={{ unstyled: true }} />
+        </MuiThemeProvider>
       </Box>
     </html>
   );

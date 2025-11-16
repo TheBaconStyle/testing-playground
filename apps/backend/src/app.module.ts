@@ -3,7 +3,6 @@ import { MailerModule, MailerService } from '@nestjs-modules/mailer';
 import { Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { render } from '@react-email/render';
-import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { genericOAuth } from 'better-auth/plugins';
@@ -18,7 +17,9 @@ import {
 } from './auth/auth.config';
 import { DB_TAG } from './db/db.config';
 import SignInEmail from './email/templates/signin';
+import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { HabitsModule } from './habits/habits.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -141,6 +142,7 @@ import { HabitsModule } from './habits/habits.module';
       },
     }),
     HabitsModule,
+    UsersModule,
   ],
   controllers: [AppController],
 })

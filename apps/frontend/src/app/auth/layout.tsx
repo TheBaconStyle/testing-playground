@@ -1,4 +1,5 @@
-import { getTheme } from '../../features/theme/api';
+import imgproxyLoader from '@/shared/images/api';
+import { getTheme } from '@/features/theme/api';
 import { ThemeSwitch } from '@/widgets/Header/ui/ThemeSwitch';
 import { Box, Grid, Paper } from '@mui/material';
 import Image from 'next/image';
@@ -20,6 +21,7 @@ export default async function AuthLayout({
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority={true}
+          loader={imgproxyLoader}
         />
       </Grid>
       <Grid

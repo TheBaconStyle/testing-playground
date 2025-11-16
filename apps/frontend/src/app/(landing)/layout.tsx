@@ -3,7 +3,7 @@ import { Stack } from '@mui/material';
 import { PropsWithChildren } from 'react';
 import { ESectionID } from './sections';
 import MuiLink from '@mui/material/Link';
-import Link from 'next/link';
+import { Link } from '@/components/Link/Link';
 
 const headerLinks = [
   { hash: ESectionID.About, label: 'О нас' },

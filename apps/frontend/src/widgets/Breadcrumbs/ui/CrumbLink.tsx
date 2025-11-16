@@ -3,9 +3,10 @@ import {
   Link as MUILink,
   Typography,
 } from '@mui/material';
-import Link, { LinkRestProps } from 'next/link';
+import Link, { LinkProps } from 'next/link';
+import { Route } from 'next';
 
-export type TBreadcrumbLink = MuiLinkProps & LinkRestProps;
+export type TBreadcrumbLink = MuiLinkProps & LinkProps<Route>;
 
 export function CrumbLink({ ...props }: TBreadcrumbLink) {
   if (!props.href) {

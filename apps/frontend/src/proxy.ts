@@ -1,16 +1,13 @@
-import {
-  MiddlewareConfig,
-  type NextRequest,
-  NextResponse
-} from 'next/server';
-import { apiAuthClient } from './features/auth/api/server';
+import { getSessionCookie } from 'better-auth/cookies';
+import { MiddlewareConfig, type NextRequest, NextResponse } from 'next/server';
 import { buildHostUrl, pathTest } from './shared/url/lib';
+import { cookiePrefix } from 'shared/auth/config';
 
 const publicPaths = ['/', '/assets/*'];
 
 const guestPaths = ['/auth/*'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const requestUrl = buildHostUrl(request);
 
   const isPublicPath = pathTest(publicPaths, requestUrl.href);
@@ -21,16 +18,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({ request });
   }
 
-  const result = await apiAuthClient.getSession({
-    fetchOptions: {
-      headers: request.headers,
-      next: {
-        tags: ['authorization'],
-      }
-    }
-  })
+  const sessionCookie = await getSessionCookie(request.headers, {
+    cookiePrefix,
+  });
 
-  const isAuthenticated = !!result.data?.user;
+  const isAuthenticated = !!sessionCookie;
 
   if (isGuestPath && isAuthenticated) {
     const redirectUrl = new URL('/', requestUrl);

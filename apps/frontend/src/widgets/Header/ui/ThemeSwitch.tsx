@@ -1,37 +1,38 @@
 'use client';
 
 import { DarkMode, LightMode, SettingsBrightness } from '@mui/icons-material';
-import { type PaletteMode } from '@mui/material';
+import { useColorScheme } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
-import { useTheme } from 'next-themes';
+import {} from '@mui/system/cssVars';
 import { useRef, useState } from 'react';
 
-const themeModes = [
+const themeModes: [
+  NonNullable<ReturnType<typeof useColorScheme>['mode']>,
+  string,
+][] = [
   ['light', 'Светлая'],
-  ['system', 'Как в системе'],
   ['dark', 'Темная'],
+  ['system', 'Системная'],
 ];
 
-export type TThemeSwitch = {
-  currentTheme: PaletteMode;
-};
-
-export function ThemeSwitch({ currentTheme }: TThemeSwitch) {
-  const { theme, setTheme } = useTheme();
+export function ThemeSwitch() {
+  const { mode, setMode } = useColorScheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const rootRef = useRef(null);
+
   return (
     <>
       <Tooltip title="Тема оформления" ref={rootRef}>
         <IconButton sx={{ color: 'inherit' }} onClick={toggleMenu}>
-          {currentTheme === 'light' && <LightMode />}
-          {currentTheme === 'dark' && <DarkMode />}
+          {mode === 'light' && <LightMode />}
+          {mode === 'system' && <SettingsBrightness />}
+          {mode === 'dark' && <DarkMode />}
         </IconButton>
       </Tooltip>
 
@@ -43,16 +44,16 @@ export function ThemeSwitch({ currentTheme }: TThemeSwitch) {
       >
         {themeModes.map(([themeKey, label]) => (
           <MenuItem
-            selected={theme === themeKey}
+            selected={mode === themeKey}
             onClick={() => {
-              setTheme(themeKey);
+              setMode(themeKey);
               toggleMenu();
             }}
             key={themeKey}
           >
             {themeKey === 'light' && <LightMode />}
-            {themeKey === 'dark' && <DarkMode />}
             {themeKey === 'system' && <SettingsBrightness />}
+            {themeKey === 'dark' && <DarkMode />}
             &nbsp;
             {label}
           </MenuItem>

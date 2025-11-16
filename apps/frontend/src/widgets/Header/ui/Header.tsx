@@ -1,20 +1,17 @@
 import { apiAuthClient } from '@/features/auth/api/server';
-import { getTheme } from '@/features/theme/api';
 import { Today as TodayIcon } from '@mui/icons-material';
 import AppBar from '@mui/material/AppBar';
 import MuiLink from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import { headers } from 'next/headers';
-import Link from 'next/link';
 import { PropsWithChildren } from 'react';
 import { ThemeSwitch } from './ThemeSwitch';
+import { Link } from '@/components/Link/Link';
 
 type THeader = PropsWithChildren;
 
 export async function Header({ children }: THeader) {
-  const currentTheme = await getTheme();
-
   const headersStore = await headers();
 
   const authResult = await apiAuthClient.getSession({
@@ -43,7 +40,7 @@ export async function Header({ children }: THeader) {
             component={Link}
             href="/"
             sx={{ textDecoration: 'none', color: 'inherit', display: 'flex' }}
-            variant="h4"
+            variant="h2"
           >
             <TodayIcon
               sx={{ fontSize: 'inherit', alignSelf: 'center', mr: 1 }}
@@ -53,7 +50,7 @@ export async function Header({ children }: THeader) {
           {children}
           {authResult.data?.user.name}
         </Stack>
-        <ThemeSwitch currentTheme={currentTheme} />
+        <ThemeSwitch />
       </Toolbar>
     </AppBar>
   );

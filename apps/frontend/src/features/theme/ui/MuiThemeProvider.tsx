@@ -1,31 +1,24 @@
 'use client';
 
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
-import { themeFont } from '../lib/font';
-import { type PropsWithChildren, useMemo } from 'react';
+import { theme } from '@/features/theme/lib/index';
+import {
+  CssBaseline,
+  InitColorSchemeScript,
+  ThemeProvider,
+} from '@mui/material';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
+import { memo, type PropsWithChildren } from 'react';
 
-export type TMuiThemeProvider = {
-  theme: 'light' | 'dark';
-};
-
-export function MuiThemeProvider({
-  children,
-  theme,
-}: PropsWithChildren<TMuiThemeProvider>) {
-  const muiTheme = useMemo(() => {
-    return createTheme({
-      palette: { mode: theme },
-      ...themeFont,
-    });
-  }, [theme]);
-
+function MuiThemeProvider({ children }: PropsWithChildren) {
   return (
-    <AppRouterCacheProvider options={{ key: 'css', prepend: true }}>
-      <ThemeProvider theme={muiTheme}>
-        {children}
+    <AppRouterCacheProvider options={{ key: 'css', enableCssLayer: true }}>
+      <InitColorSchemeScript modeStorageKey="theme-mode" attribute="class" />
+      <ThemeProvider theme={theme} modeStorageKey="theme-mode">
         <CssBaseline />
+        {children}
       </ThemeProvider>
     </AppRouterCacheProvider>
   );
 }
+
+export default memo(MuiThemeProvider);

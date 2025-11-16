@@ -53,7 +53,7 @@ export const defaultAuthPlugins = [
   }),
   username(),
   openAPI({ disableDefaultReference: true }),
-];
+] satisfies BetterAuthOptions['plugins'];
 
 export const defaultAuthOptions = {
   plugins: [...defaultAuthPlugins, genericOAuth({ config: [] })],
