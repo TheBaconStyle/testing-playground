@@ -61,5 +61,6 @@
     "**/*spec.ts",
     "eslint.config.ts",
     "nestia.config.ts"
-  ]
+  ],
+  "include": ["./src"]
 }
