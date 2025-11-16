@@ -32,17 +32,11 @@
     },
     "frontend#dev": {
       "dependsOn": ["sdk#build", "shared#build"],
-      "with": ["backend#dev"],
       "persistent": true,
       "cache": false
     },
     "backend#dev": {
       "dependsOn": ["shared#build", "db#build", "backend#build"],
-      "with": ["frontend#dev"],
-      "persistent": true,
-      "cache": false
-    },
-    "dev": {
       "persistent": true,
       "cache": false
     }
