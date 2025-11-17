@@ -2,9 +2,10 @@ import { InjectDrizzle } from '@knaadh/nestjs-drizzle-pg';
 import { TypedRoute } from '@nestia/core';
 import { Controller, Logger, Req } from '@nestjs/common';
 import { schema } from 'db';
-import { desc, sql } from 'drizzle-orm';
+import { desc, eq, sql } from 'drizzle-orm';
 import { Request } from 'express';
 import { DB, DB_TAG } from './db/db.config';
+import { habit, habitCheckmark, user } from 'db/schema';
 
 @Controller({ version: '1', path: 'app' })
 export class AppController {
@@ -45,50 +46,5 @@ export class AppController {
     return 'Hello Nestjs';
   }
 
-  @TypedRoute.Post('stats')
-  async getHabitStats() {
-    const rankedDates = await this.db.$with('RankedDates').as(
-      this.db
-        .select({
-          habitId: schema.habitCheckmark.habitId,
-          checkDate: schema.habitCheckmark.date,
-          rowNumber:
-            sql<number>`ROW_NUMBER() OVER (PARTITION BY ${schema.habitCheckmark.habitId} ORDER BY ${schema.habitCheckmark.date})`.as(
-              'rowNumber',
-            ),
-        })
-        .from(schema.habitCheckmark),
-    );
-    const streakGroups = await this.db.$with('StreakGroups').as(
-      this.db
-        .with(rankedDates)
-        .select({
-          habitId: rankedDates.habitId,
-          checkDate: rankedDates.checkDate,
-          groupId:
-            sql<string>`${rankedDates.checkDate} - (${rankedDates.rowNumber} * INTERVAL '1 day')`.as(
-              'groupId',
-            ),
-        })
-        .from(rankedDates),
-    );
-    const habitStats = await this.db
-      .with(streakGroups)
-      .select({
-        habitId: streakGroups.habitId,
-        lastCheckDate: sql<number>`MAX(${streakGroups.checkDate})`.as(
-          'lastCheckDate',
-        ),
-        currentStreak: sql<number>`COUNT(*)`.as('currentStreak'),
-        longestStreak:
-          sql<number>`MAX(COUNT(*)) OVER (PARTITION BY ${streakGroups.habitId})`.as(
-            'longestStreak',
-          ),
-      })
-      .from(streakGroups)
-      .groupBy(streakGroups.habitId, streakGroups.groupId)
-      .orderBy(streakGroups.habitId, desc(streakGroups.habitId));
-
-    return habitStats;
-  }
+  
 }

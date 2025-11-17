@@ -56,7 +56,7 @@ import { UsersModule } from './users/users.module';
       isGlobal: true,
       inject: [ConfigService],
       useFactory(config: ConfigService) {
-        const port = Number(config.get<string>('MINIO_PORT'));
+        const port = parseInt(config.get<string>('MINIO_PORT') ?? '');
 
         return {
           endPoint: config.getOrThrow('MINIO_HOST'),

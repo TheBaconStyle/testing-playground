@@ -1,36 +1,55 @@
 import { InjectDrizzle } from '@knaadh/nestjs-drizzle-pg';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { habit } from 'db/schema';
-import { and, eq, gte, isNotNull, isNull, like, lte, SQL } from 'drizzle-orm';
+import { habit, habitCheckmark, user } from 'db/schema';
+import {
+  and,
+  desc,
+  eq,
+  gte,
+  InferSelectModel,
+  isNotNull,
+  isNull,
+  like,
+  lte,
+  sql,
+  SQL,
+} from 'drizzle-orm';
 import { DB, DB_TAG } from 'src/db/db.config';
 import { TGetHabitQuery } from './types';
+import { tags } from 'typia';
+import { slugify } from 'transliteration';
+import { Extends } from 'shared/types/extends';
+
+export type HabitModel = InferSelectModel<typeof habit>;
 
 /**
  * @title CreateHabitDto
  * @description Данные, необходимые для создания новой привычки.
  */
-export type CreateHabitDto = {
-  /**
-   * Имя привычки.
-   * @length 1 256
-   */
-  name: string;
+export type CreateHabitDto = Extends<
+  Pick<HabitModel, 'name' | 'description' | 'icon' | 'reminderRule'>,
+  {
+    /**
+     * Имя привычки.
+     */
+    name: string & tags.MaxLength<256>;
 
-  /**
-   * Описание привычки (необязательно).
-   */
-  description?: string;
+    /**
+     * Описание привычки (необязательно).
+     */
+    description?: string;
 
-  /**
-   * Иконка для привычки (необязательно).
-   */
-  icon?: string;
+    /**
+     * Иконка для привычки (необязательно).
+     */
+    icon?: string;
 
-  /**
-   * Правило напоминания (например, cron-строка) (необязательно).
-   */
-  reminderRule?: string;
-};
+    /**
+     * Правило напоминания (например, cron-строка) (необязательно).
+     */
+    reminderRule?: string;
+  }
+>;
 
 /**
  * @title UpdateHabitDto
@@ -45,10 +64,7 @@ export type UpdateHabitDto = Partial<CreateHabitDto> & {
 
 // Функция для генерации "slug" из имени, который будет использоваться как codeName
 const generateCodeName = (name: string): string => {
-  return name
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '');
+  return slugify(name);
 };
 
 @Injectable()
@@ -92,7 +108,14 @@ export class HabitsService {
    * @returns Список привычек.
    */
   async findAll(userId: string, query: TGetHabitQuery = {}) {
-    const { status = 'active', startDateGte, finishDateLte, search, size = 20, page = 1 } = query;
+    const {
+      status = 'active',
+      startDateGte,
+      finishDateLte,
+      search,
+      size = 20,
+      page = 1,
+    } = query;
 
     const calculatedLimit = size;
 
@@ -125,8 +148,8 @@ export class HabitsService {
       filters.push(
         and(
           like(habit.name, searchPattern),
-          like(habit.codeName, searchPattern)
-        )
+          like(habit.codeName, searchPattern),
+        ),
       );
     }
 
@@ -212,5 +235,68 @@ export class HabitsService {
     return {
       message: `Habit "${deletedHabit.name}" with ID ${deletedHabit.id} successfully removed.`,
     };
+  }
+
+  /**
+   * @description Отдаёт статистику по привычке.
+   * @param userId ID текущего пользователя.
+   * @param id ID привычки.
+   * @returns Объект с информацией об статистике.
+   */
+  async getHabitStats(userId: string, id?: string) {
+    const whereSelection: (SQL<unknown> | undefined)[] = [eq(user.id, userId)];
+
+    if (!!id) {
+      whereSelection.push(eq(habit.id, id));
+    }
+
+    const rankedDates = await this.db.$with('RankedDates').as(
+      this.db
+        .select({
+          habitId: habitCheckmark.habitId,
+          checkDate: habitCheckmark.date,
+          rowNumber:
+            sql<number>`ROW_NUMBER() OVER (PARTITION BY ${habitCheckmark.habitId} ORDER BY ${habitCheckmark.date})`.as(
+              'rowNumber',
+            ),
+        })
+        .from(habitCheckmark)
+        .innerJoin(habit, eq(habitCheckmark.habitId, habit.id))
+        .innerJoin(user, eq(habit.userId, user.id))
+        .where(and(...whereSelection)),
+    );
+
+    const streakGroups = await this.db.$with('StreakGroups').as(
+      this.db
+        .with(rankedDates)
+        .select({
+          habitId: rankedDates.habitId,
+          checkDate: rankedDates.checkDate,
+          groupId:
+            sql<string>`${rankedDates.checkDate} - (${rankedDates.rowNumber} * INTERVAL '1 day')`.as(
+              'groupId',
+            ),
+        })
+        .from(rankedDates),
+    );
+
+    const habitStats = await this.db
+      .with(streakGroups)
+      .select({
+        habitId: streakGroups.habitId,
+        lastCheckDate: sql<number>`MAX(${streakGroups.checkDate})`.as(
+          'lastCheckDate',
+        ),
+        currentStreak: sql<number>`COUNT(*)`.as('currentStreak'),
+        longestStreak:
+          sql<number>`MAX(COUNT(*)) OVER (PARTITION BY ${streakGroups.habitId})`.as(
+            'longestStreak',
+          ),
+      })
+      .from(streakGroups)
+      .groupBy(streakGroups.habitId, streakGroups.groupId)
+      .orderBy(streakGroups.habitId, desc(streakGroups.habitId));
+
+    return habitStats;
   }
 }

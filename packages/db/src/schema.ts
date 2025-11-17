@@ -1,4 +1,7 @@
 import { relations } from "drizzle-orm";
+import { uniqueIndex } from 'drizzle-orm/pg-core';
+import { primaryKey } from 'drizzle-orm/pg-core';
+import { enumToPgEnum } from './utils/toPgEnum';
 import {
   boolean,
   integer,
@@ -98,6 +101,14 @@ export const verification = dbSchema.table("verification", {
   }).defaultNow(),
 });
 
+export enum EHabitTypes {
+  BINARY = 'binary',
+  COUNTABLE = 'countable',
+  MEASURABLE = 'measurable'
+}
+
+export const habitTypeEnum = dbSchema.enum('habit_types', enumToPgEnum(EHabitTypes))
+
 export const habit = dbSchema.table("habit", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")
@@ -106,6 +117,7 @@ export const habit = dbSchema.table("habit", {
   name: varchar("name", { length: 256 }).notNull(),
   codeName: varchar("code_name", { length: 256 }).notNull(),
   description: text("description"),
+  type: habitTypeEnum("type").notNull().default(EHabitTypes.BINARY),
   icon: text("icon"),
   start: timestamp("start", {
     mode: "date",
@@ -129,7 +141,9 @@ export const habit = dbSchema.table("habit", {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
-});
+}, (t)=>[
+  primaryKey({ columns: [t.id, t.codeName] })
+]);
 
 export const habitRelations = relations(habit, ({ many }) => ({
   checkmarks: many(habitCheckmark),
@@ -141,7 +155,7 @@ export const habitCheckmark = dbSchema.table("habit_checkmark", {
     .notNull()
     .references(() => habit.id, { onDelete: "cascade", onUpdate: "cascade" }),
   date: timestamp("date", { mode: "date", withTimezone: true }).notNull(),
-  value: boolean("checked").notNull(),
+  progressValue: boolean("progressValue").notNull(),
   percentage: integer('percentage'),
   note: text("note"),
   createdAt: timestamp("created_at", {
@@ -153,7 +167,9 @@ export const habitCheckmark = dbSchema.table("habit_checkmark", {
     mode: "date",
     withTimezone: true,
   }).$onUpdate(() => new Date()),
-});
+}, t=>[
+  uniqueIndex().on(t.date, t.habitId)
+]);
 
 export const habitCheckmarksRelations = relations(
   habitCheckmark,

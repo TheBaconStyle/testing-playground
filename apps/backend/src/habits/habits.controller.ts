@@ -1,15 +1,10 @@
+import { TypedBody, TypedParam, TypedRoute } from '@nestia/core';
 import {
-  Body,
   Controller,
-  Delete,
-  Get,
-  Logger,
-  Param,
-  Patch,
-  Post
+  Logger
 } from '@nestjs/common';
-import { CreateHabitDto, HabitsService, UpdateHabitDto } from './habits.service';
 import { Session, UserSession } from '@thallesp/nestjs-better-auth';
+import { CreateHabitDto, HabitsService, UpdateHabitDto } from './habits.service';
 
 export type TCreateHabitResponse = {
   success: boolean;
@@ -21,37 +16,42 @@ export class HabitsController {
 
   constructor(private readonly habitsService: HabitsService) {}
 
-  @Post()
+  @TypedRoute.Post()
   async create(
     @Session() session: UserSession,
-    @Body() createHabitDto: CreateHabitDto,
+    @TypedBody() createHabitDto: CreateHabitDto,
   ) {
     this.logger.log(`User ${session.user.id} creating new habit: ${createHabitDto.name}`);
     const newHabit = await this.habitsService.create(session.user.id, createHabitDto);
     return newHabit;
   }
 
-  @Get()
+  @TypedRoute.Get()
   async findAll(@Session() session: UserSession) {
     return this.habitsService.findAll(session.user.id);
   }
 
-  @Get(':id')
-  async findOne(@Session() session: UserSession, @Param('id') id: string) {
+  @TypedRoute.Get(':id')
+  async findOne(@Session() session: UserSession, @TypedParam('id') id: string) {
     return this.habitsService.findOne(id, session.user.id);
   }
 
-  @Patch(':id')
+  @TypedRoute.Patch(':id')
   async update(
     @Session() session: UserSession,
-    @Param('id') id: string,
-    @Body() updateHabitDto: UpdateHabitDto,
+    @TypedParam('id') id: string,
+    @TypedBody() updateHabitDto: UpdateHabitDto,
   ) {
     return this.habitsService.update(id, session.user.id, updateHabitDto);
   }
 
-  @Delete(':id')
-  async remove(@Session() session: UserSession, @Param('id') id: string) {
+  @TypedRoute.Delete(':id')
+  async remove(@Session() session: UserSession, @TypedParam('id') id: string) {
     return this.habitsService.remove(id, session.user.id);
+  }
+
+  @TypedRoute.Get(':id/stats')
+  async getStats(@Session() session: UserSession, @TypedParam('id') id: string) {
+    return this.habitsService.getHabitStats(session.user.id, id);
   }
 }

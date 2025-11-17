@@ -36,7 +36,7 @@
       "cache": false
     },
     "backend#dev": {
-      "dependsOn": ["shared#build", "db#build", "backend#build"],
+      "dependsOn": ["shared#build", "db#build"],
       "persistent": true,
       "cache": false
     }
