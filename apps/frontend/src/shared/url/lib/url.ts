@@ -1,4 +1,5 @@
-import { NextRequest, URLPattern } from 'next/server';
+import { NextRequest } from 'next/server';
+import { URLPattern } from 'urlpattern-polyfill/urlpattern';
 
 export function pathTest(patterns: string[], href: string) {
   const pathPatterns = patterns.map(

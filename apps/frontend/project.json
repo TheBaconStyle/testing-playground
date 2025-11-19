@@ -1,0 +1,14 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "frontend",
+  "sourceRoot": "apps/frontend",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "dependsOn": ["shared:build", "sdk:build"]
+    },
+    "dev": {
+      "dependsOn": ["shared:build", "sdk:build"]
+    }
+  }
+}

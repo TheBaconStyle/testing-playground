@@ -1,0 +1,14 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "backend",
+  "sourceRoot": "apps/backend",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "dependsOn": ["db:build", "shared:build"]
+    },
+    "dev": {
+      "dependsOn": ["db:build", "shared:build"]
+    }
+  }
+}

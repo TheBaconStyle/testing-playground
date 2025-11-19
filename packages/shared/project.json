@@ -1,0 +1,14 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "shared",
+  "sourceRoot": "packages/shared",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "dependsOn": ["db:build"]
+    },
+    "dev": {
+      "dependsOn": ["db:build"]
+    }
+  }
+}

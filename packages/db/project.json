@@ -1,0 +1,9 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "db",
+  "sourceRoot": "packages/db",
+  "projectType": "library",
+  "targets": {
+    "build": {}
+  }
+}
